@@ -10,7 +10,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500;700;900&family=Crimson+Text:ital@0;1&display=swap" rel="stylesheet">
-    <style>
+
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<style>
         :root { 
             --accent: #f59e0b; 
             --bg: #0f172a; 
@@ -1648,6 +1653,37 @@
     </nav>
 
     <script>
+
+        
+// ==========================================
+// FIREBASE CONFIGURATION - ADD THIS FIRST!
+// ==========================================
+
+// YOUR FIREBASE CONFIG HERE
+const firebaseConfig = {
+  apiKey: "AIzaSyC44G55Ficz4mXWjhp_hePKPCIqTpeGDn4",
+  authDomain: "daily-dawn-1e86f.firebaseapp.com",
+  projectId: "daily-dawn-1e86f",
+  storageBucket: "daily-dawn-1e86f.firebasestorage.app",
+  messagingSenderId: "677716588250",
+  appId: "1:677716588250:web:c56a62a10375835c0a17e3"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Global state
+let currentFirebaseUser = null;
+let currentUserData = null;
+
+// ==========================================
+// YOUR EXISTING CODE CONTINUES BELOW...
+// ==========================================
+
+// ... rest of your code ...
+
         // Prevent keyboard shortcuts for viewing source
         document.addEventListener('keydown', function(e) {
             // Prevent F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
