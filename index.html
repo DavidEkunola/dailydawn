@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -251,6 +250,55 @@
             font-weight: 900;
             font-size: 0.875rem;
             pointer-events: none;
+        }
+
+        .gym-tab {
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .gym-tab.active {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+        }
+        .gym-tab:not(.active) {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .macro-ring {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid;
+            font-weight: 900;
+        }
+        .workout-plan-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.25rem;
+            border-radius: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .workout-plan-card:active {
+            transform: scale(0.98);
+        }
+        .workout-plan-card.beginner {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        }
+        .workout-plan-card.intermediate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .workout-plan-card.advanced {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
     </style>
 </head>
@@ -1060,65 +1108,367 @@
         </header>
 
         <main class="p-5 -mt-6">
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-trophy text-amber-500"></i>
-                    Today's Workout Stats
+            <!-- Gym Navigation Tabs -->
+            <div class="flex gap-2 mb-4 overflow-x-auto pb-2" style="scrollbar-width: none;">
+                <button class="gym-tab active" onclick="switchGymTab('nutrition')" id="gym-tab-nutrition">
+                    <i class="fa-solid fa-utensils"></i> Nutrition
+                </button>
+                <button class="gym-tab" onclick="switchGymTab('workouts')" id="gym-tab-workouts">
+                    <i class="fa-solid fa-dumbbell"></i> Workouts
+                </button>
+                <button class="gym-tab" onclick="switchGymTab('exercises')" id="gym-tab-exercises">
+                    <i class="fa-solid fa-video"></i> Exercises
+                </button>
+                <button class="gym-tab" onclick="switchGymTab('progress')" id="gym-tab-progress">
+                    <i class="fa-solid fa-chart-line"></i> Progress
+                </button>
+            </div>
+
+            <!-- Nutrition Tab Content -->
+            <div id="gym-nutrition-content" class="gym-tab-content">
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-utensils text-red-500"></i>
+                        Today's Macros
+                    </div>
+                    
+                    <div class="flex justify-around mb-6 py-4">
+                        <div class="text-center">
+                            <div class="macro-ring border-red-500 text-red-600">
+                                <span id="protein-today" class="text-xl">0</span>
+                                <span class="text-xs">g</span>
+                            </div>
+                            <p class="text-xs font-bold text-slate-600 mt-2">Protein</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="macro-ring border-blue-500 text-blue-600">
+                                <span id="carbs-today" class="text-xl">0</span>
+                                <span class="text-xs">g</span>
+                            </div>
+                            <p class="text-xs font-bold text-slate-600 mt-2">Carbs</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="macro-ring border-amber-500 text-amber-600">
+                                <span id="fats-today" class="text-xl">0</span>
+                                <span class="text-xs">g</span>
+                            </div>
+                            <p class="text-xs font-bold text-slate-600 mt-2">Fats</p>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-4">
+                        <p class="text-sm font-bold text-slate-600">Total Calories Today</p>
+                        <p class="text-3xl font-black text-slate-900" id="calories-today">0</p>
+                    </div>
+
+                    <button onclick="showLogMealModal()" class="btn-primary">
+                        <i class="fa-solid fa-plus"></i> Log Meal
+                    </button>
                 </div>
-                <div class="grid grid-cols-3 gap-3 mt-3">
-                    <div class="text-center p-3 bg-slate-50 rounded-xl">
-                        <p class="text-2xl font-black text-orange-600" id="gym-exercises-count">0</p>
-                        <p class="text-xs text-slate-500 font-bold">Exercises</p>
+
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-droplet text-blue-500"></i>
+                        Water Intake
                     </div>
-                    <div class="text-center p-3 bg-slate-50 rounded-xl">
-                        <p class="text-2xl font-black text-orange-600" id="gym-sets-count">0</p>
-                        <p class="text-xs text-slate-500 font-bold">Sets</p>
+                    <div class="mb-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <p class="text-sm font-bold text-slate-700">Today's Water</p>
+                            <p class="text-lg font-black text-blue-600"><span id="water-count">0</span>/8 glasses</p>
+                        </div>
+                        <div class="h-3 bg-slate-200 rounded-full overflow-hidden">
+                            <div id="water-progress" class="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500" style="width: 0%"></div>
+                        </div>
                     </div>
-                    <div class="text-center p-3 bg-slate-50 rounded-xl">
-                        <p class="text-2xl font-black text-orange-600" id="gym-volume">0</p>
-                        <p class="text-xs text-slate-500 font-bold">Volume</p>
+                    <button onclick="addWaterGlass()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm">
+                        <i class="fa-solid fa-plus"></i> Add Glass
+                    </button>
+                </div>
+
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-fire text-orange-500"></i>
+                        Healthy Eating Streak
+                    </div>
+                    <div class="text-center p-6 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl">
+                        <p class="text-5xl font-black text-orange-600 mb-2" id="eating-streak">0</p>
+                        <p class="text-sm font-bold text-orange-800">Days of Healthy Eating</p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-history text-slate-500"></i>
+                        Meal History
+                    </div>
+                    <div id="meal-history" class="space-y-2">
+                        <p class="text-sm text-slate-500 text-center py-4">No meals logged today</p>
                     </div>
                 </div>
             </div>
 
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-fire text-orange-500"></i>
-                    Training Tips
-                </div>
-                <div class="space-y-2 text-sm">
-                    <div class="tip-card">
-                        <p class="font-bold text-amber-800 mb-1">Progressive Overload</p>
-                        <p class="text-xs text-amber-900">Gradually increase weight, reps, or sets each week.</p>
+            <!-- Workouts Tab Content -->
+            <div id="gym-workouts-content" class="gym-tab-content" style="display: none;">
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-clipboard-list text-indigo-500"></i>
+                        Workout Plans
                     </div>
-                    <div class="tip-card">
-                        <p class="font-bold text-amber-800 mb-1">Form Over Ego</p>
-                        <p class="text-xs text-amber-900">Perfect form prevents injury and builds muscle effectively.</p>
+                    <p class="text-sm text-slate-600 mb-4">Choose your fitness level and training location</p>
+
+                    <h3 class="font-bold text-sm text-slate-800 mb-3 uppercase tracking-wider">🌱 Beginner</h3>
+                    <div class="workout-plan-card beginner" onclick="showWorkoutPlan('beginner-gym')">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-bold text-lg">Beginner - Gym</p>
+                                <p class="text-sm opacity-90">3 days/week • Full Body</p>
+                                <p class="text-xs opacity-75 mt-1">Perfect for building foundation strength</p>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-2xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-plan-card beginner" onclick="showWorkoutPlan('beginner-home')">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-bold text-lg">Beginner - Home</p>
+                                <p class="text-sm opacity-90">3 days/week • Bodyweight</p>
+                                <p class="text-xs opacity-75 mt-1">No equipment needed to get started</p>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-2xl"></i>
+                        </div>
+                    </div>
+
+                    <h3 class="font-bold text-sm text-slate-800 mb-3 mt-6 uppercase tracking-wider">💪 Intermediate</h3>
+                    <div class="workout-plan-card intermediate" onclick="showWorkoutPlan('intermediate-gym')">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-bold text-lg">Intermediate - Gym</p>
+                                <p class="text-sm opacity-90">4 days/week • Push/Pull/Legs</p>
+                                <p class="text-xs opacity-75 mt-1">Build muscle and strength efficiently</p>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-2xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-plan-card intermediate" onclick="showWorkoutPlan('intermediate-home')">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-bold text-lg">Intermediate - Home</p>
+                                <p class="text-sm opacity-90">4 days/week • Resistance Bands</p>
+                                <p class="text-xs opacity-75 mt-1">Effective training with minimal equipment</p>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-2xl"></i>
+                        </div>
+                    </div>
+
+                    <h3 class="font-bold text-sm text-slate-800 mb-3 mt-6 uppercase tracking-wider">🔥 Advanced</h3>
+                    <div class="workout-plan-card advanced" onclick="showWorkoutPlan('advanced-gym')">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-bold text-lg">Advanced - Gym</p>
+                                <p class="text-sm opacity-90">5-6 days/week • Split Routine</p>
+                                <p class="text-xs opacity-75 mt-1">Maximize muscle growth and performance</p>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-2xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-plan-card advanced" onclick="showWorkoutPlan('advanced-home')">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-bold text-lg">Advanced - Home</p>
+                                <p class="text-sm opacity-90">5-6 days/week • HIIT + Strength</p>
+                                <p class="text-xs opacity-75 mt-1">Intense home training protocols</p>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-bed text-purple-500"></i>
+                        Rest Day Recommendations
+                    </div>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-bold text-sm text-blue-900 mb-1">🧘 Active Recovery</p>
+                            <p class="text-xs text-blue-800">Light yoga, walking (20-30 min), or stretching to promote blood flow and reduce soreness</p>
+                        </div>
+                        <div class="p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                            <p class="font-bold text-sm text-green-900 mb-1">💤 Sleep Optimization</p>
+                            <p class="text-xs text-green-800">Aim for 7-9 hours. Recovery and muscle growth happen during sleep. Keep room cool and dark.</p>
+                        </div>
+                        <div class="p-3 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                            <p class="font-bold text-sm text-purple-900 mb-1">🍎 Nutrition Focus</p>
+                            <p class="text-xs text-purple-800">Prioritize protein (0.8-1g per lb bodyweight), stay hydrated, and eat anti-inflammatory foods</p>
+                        </div>
+                        <div class="p-3 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+                            <p class="font-bold text-sm text-amber-900 mb-1">🎯 Mental Recovery</p>
+                            <p class="text-xs text-amber-800">Practice mindfulness, journaling, or meditation. Mental rest is as important as physical rest.</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-plus text-orange-600"></i>
-                    Log Exercise
+            <!-- Exercises Tab Content -->
+            <div id="gym-exercises-content" class="gym-tab-content" style="display: none;">
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-video text-red-500"></i>
+                        Exercise Video Library
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">Learn proper form and technique</p>
+
+                    <div class="space-y-4">
+                        <!-- Squat -->
+                        <div class="p-4 bg-slate-50 rounded-xl">
+                            <h4 class="font-bold text-slate-900 mb-2">Barbell Squat</h4>
+                            <div class="aspect-video bg-slate-200 rounded-lg overflow-hidden mb-2">
+                                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/ultWZbUMPL8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-2">
+                                <strong>Key Points:</strong> Feet shoulder-width, chest up, knees track over toes, depth to parallel or below
+                            </p>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-bold">Legs</span>
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Compound</span>
+                            </div>
+                        </div>
+
+                        <!-- Deadlift -->
+                        <div class="p-4 bg-slate-50 rounded-xl">
+                            <h4 class="font-bold text-slate-900 mb-2">Conventional Deadlift</h4>
+                            <div class="aspect-video bg-slate-200 rounded-lg overflow-hidden mb-2">
+                                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/op9kVnSso6Q" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-2">
+                                <strong>Key Points:</strong> Neutral spine, hip hinge, bar close to body, drive through heels
+                            </p>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold">Back</span>
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Compound</span>
+                            </div>
+                        </div>
+
+                        <!-- Bench Press -->
+                        <div class="p-4 bg-slate-50 rounded-xl">
+                            <h4 class="font-bold text-slate-900 mb-2">Barbell Bench Press</h4>
+                            <div class="aspect-video bg-slate-200 rounded-lg overflow-hidden mb-2">
+                                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/rT7DgCr-3pg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-2">
+                                <strong>Key Points:</strong> Retract scapula, slight arch, bar to mid-chest, elbows 45 degrees
+                            </p>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-bold">Chest</span>
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Compound</span>
+                            </div>
+                        </div>
+
+                        <!-- Pull-ups -->
+                        <div class="p-4 bg-slate-50 rounded-xl">
+                            <h4 class="font-bold text-slate-900 mb-2">Pull-ups / Chin-ups</h4>
+                            <div class="aspect-video bg-slate-200 rounded-lg overflow-hidden mb-2">
+                                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/eGo4IYlbE5g" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-2">
+                                <strong>Key Points:</strong> Full hang, shoulder blades down, pull chest to bar, controlled descent
+                            </p>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs font-bold">Back</span>
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Bodyweight</span>
+                            </div>
+                        </div>
+
+                        <!-- Plank -->
+                        <div class="p-4 bg-slate-50 rounded-xl">
+                            <h4 class="font-bold text-slate-900 mb-2">Plank Variations</h4>
+                            <div class="aspect-video bg-slate-200 rounded-lg overflow-hidden mb-2">
+                                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/ASdvN_XEl_c" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-2">
+                                <strong>Key Points:</strong> Straight line from head to heels, engage core, don't let hips sag
+                            </p>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="px-2 py-1 bg-amber-100 text-amber-700 rounded text-xs font-bold">Core</span>
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Isometric</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <input id="gym-exercise" class="input-field mb-3" placeholder="Exercise name (e.g., Bench Press)">
-                <input id="gym-weight" class="input-field mb-3" placeholder="Weight (lbs/kg)">
-                <input id="gym-reps" class="input-field mb-3" placeholder="Reps x Sets (e.g., 10x3)">
-                <textarea id="gym-notes" class="textarea-field" placeholder="Notes about form, how it felt..."></textarea>
-                <button onclick="saveGymEntry()" class="btn-primary mt-4">Log Workout</button>
+
+                <!-- Exercise Images (Pinterest Style) -->
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-images text-pink-500"></i>
+                        Exercise Form Guide
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">Visual reference for proper technique</p>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="aspect-square bg-slate-100 rounded-lg overflow-hidden">
+                            <img src="https://i.pinimg.com/564x/8e/3f/0e/8e3f0e0a9c0f5c3e5e5f5e5e5e5e5e5e.jpg" alt="Squat form" class="w-full h-full object-cover" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\'%3E%3Crect fill=\'%23e2e8f0\' width=\'200\' height=\'200\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Arial\' font-size=\'16\' fill=\'%2364748b\'%3ESquat Form%3C/text%3E%3C/svg%3E'">
+                            <p class="text-xs font-bold text-center mt-1">Squat</p>
+                        </div>
+                        <div class="aspect-square bg-slate-100 rounded-lg overflow-hidden">
+                            <img src="https://i.pinimg.com/564x/d4/8c/72/d48c72d48c72d48c72d48c72d48c72d4.jpg" alt="Deadlift form" class="w-full h-full object-cover" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\'%3E%3Crect fill=\'%23e2e8f0\' width=\'200\' height=\'200\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Arial\' font-size=\'16\' fill=\'%2364748b\'%3EDeadlift Form%3C/text%3E%3C/svg%3E'">
+                            <p class="text-xs font-bold text-center mt-1">Deadlift</p>
+                        </div>
+                        <div class="aspect-square bg-slate-100 rounded-lg overflow-hidden">
+                            <img src="https://i.pinimg.com/564x/a1/b2/c3/a1b2c3a1b2c3a1b2c3a1b2c3a1b2c3a1.jpg" alt="Bench press form" class="w-full h-full object-cover" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\'%3E%3Crect fill=\'%23e2e8f0\' width=\'200\' height=\'200\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Arial\' font-size=\'14\' fill=\'%2364748b\'%3EBench Press%3C/text%3E%3C/svg%3E'">
+                            <p class="text-xs font-bold text-center mt-1">Bench Press</p>
+                        </div>
+                        <div class="aspect-square bg-slate-100 rounded-lg overflow-hidden">
+                            <img src="https://i.pinimg.com/564x/f5/e4/d3/f5e4d3f5e4d3f5e4d3f5e4d3f5e4d3f5.jpg" alt="Pull-up form" class="w-full h-full object-cover" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\'%3E%3Crect fill=\'%23e2e8f0\' width=\'200\' height=\'200\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Arial\' font-size=\'16\' fill=\'%2364748b\'%3EPull-up Form%3C/text%3E%3C/svg%3E'">
+                            <p class="text-xs font-bold text-center mt-1">Pull-ups</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-3 text-center">Tap any exercise for detailed breakdown</p>
+                </div>
             </div>
 
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-list text-slate-500"></i>
-                    Workout Log
+            <!-- Progress Tab Content -->
+            <div id="gym-progress-content" class="gym-tab-content" style="display: none;">
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-chart-line text-green-500"></i>
+                        Progressive Overload Tracking
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">Track your strength gains over time</p>
+
+                    <div id="overload-summary" class="p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl mb-4">
+                        <p class="font-bold text-sm text-emerald-900 mb-2">📈 This Week's Progress</p>
+                        <div id="weekly-progress">
+                            <p class="text-xs text-emerald-700">Log your first workout to see progress</p>
+                        </div>
+                    </div>
+
+                    <button onclick="showLogWorkoutModal()" class="btn-primary mb-4">
+                        <i class="fa-solid fa-plus"></i> Log Workout Session
+                    </button>
+
+                    <div class="tip-card mb-4">
+                        <p class="text-xs font-bold text-amber-900 mb-1">💡 Progressive Overload</p>
+                        <p class="text-xs text-amber-800">Gradually increase weight (2.5-5%), reps (+1-2), or sets over time to continue building strength and muscle.</p>
+                    </div>
+
+                    <div id="exercise-progress-list" class="space-y-3">
+                        <!-- Exercise progress will be loaded here -->
+                    </div>
                 </div>
-                <div id="gym-entries"></div>
+
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-history text-slate-500"></i>
+                        Workout History
+                    </div>
+                    <div id="workout-history-list" class="space-y-2">
+                        <p class="text-sm text-slate-500 text-center py-4">No workouts logged yet</p>
+                    </div>
+                </div>
             </div>
-        </main>
-        
         <button onclick="scrollToTop()" class="fab-button">
             <i class="fa-solid fa-arrow-up text-xl"></i>
         </button>
@@ -1263,6 +1613,109 @@
                     <div class="tip-card">
                         <p class="font-bold text-amber-800 mb-1">Track Visibly</p>
                         <p class="text-xs text-amber-900">Don't break the chain. Each check builds momentum.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-user-graduate text-purple-500"></i>
+                    Character Development
+                </div>
+                <p class="text-sm text-slate-600 mb-4">Build lasting character traits</p>
+                
+                <div class="mb-4">
+                    <div class="flex gap-2 mb-3">
+                        <button onclick="switchCharacterTab('traits')" id="char-tab-traits" class="flex-1 py-2 px-4 rounded-lg font-bold text-sm bg-slate-900 text-white">
+                            My Traits
+                        </button>
+                        <button onclick="switchCharacterTab('assessment')" id="char-tab-assessment" class="flex-1 py-2 px-4 rounded-lg font-bold text-sm bg-slate-100 text-slate-700">
+                            Assessment
+                        </button>
+                    </div>
+
+                    <!-- Traits Tab -->
+                    <div id="character-traits-content">
+                        <div id="character-traits-list" class="space-y-3 mb-4">
+                            <!-- Character traits will be loaded here by JS -->
+                        </div>
+                        
+                        <button onclick="showAddCharacterTrait()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-4 rounded-xl font-bold text-sm">
+                            <i class="fa-solid fa-plus"></i> Add Character Goal
+                        </button>
+                    </div>
+
+                    <!-- Assessment Tab -->
+                    <div id="character-assessment-content" style="display: none;">
+                        <div class="mb-4">
+                            <h3 class="font-bold text-sm text-slate-800 mb-3">Weekly Self-Assessment</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-xs font-bold text-slate-600 block mb-1">How would you rate your growth this week? (1-10)</label>
+                                    <input type="number" id="assess-growth" min="1" max="10" class="input-field" placeholder="1-10">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-600 block mb-1">Which character trait did you display most?</label>
+                                    <input type="text" id="assess-trait" class="input-field" placeholder="e.g., Patience">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-600 block mb-1">What area would you like to improve next week?</label>
+                                    <textarea id="assess-improve" class="textarea-field" style="min-height: 60px;" placeholder="Focus area for improvement..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-600 block mb-1">What challenges did you face and how did you respond?</label>
+                                    <textarea id="assess-challenges" class="textarea-field" style="min-height: 60px;" placeholder="Challenges and responses..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-600 block mb-1">What are you most grateful for this week?</label>
+                                    <textarea id="assess-gratitude" class="textarea-field" style="min-height: 60px;" placeholder="Gratitude reflection..."></textarea>
+                                </div>
+                            </div>
+                            <button onclick="saveWeeklyAssessment()" class="btn-primary mt-4">Save Assessment</button>
+                        </div>
+
+                        <div class="p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl mb-4">
+                            <p class="font-bold text-sm text-emerald-900 mb-2">📊 Growth Metrics</p>
+                            <div id="growth-metrics">
+                                <p class="text-xs text-emerald-700">Complete an assessment to see your growth metrics</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-sm text-slate-800 mb-3">Past Assessments</p>
+                            <div id="past-assessments-list" class="space-y-2">
+                                <!-- Past assessments will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-book-open text-blue-500"></i>
+                    How to Form Habits
+                </div>
+                <div class="space-y-3">
+                    <div class="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                        <p class="font-bold text-sm text-blue-900 mb-1">🎯 Start Small</p>
+                        <p class="text-xs text-blue-800">Begin with tiny habits that take less than 2 minutes. Want to read more? Start with just 2 pages daily. Build from there.</p>
+                    </div>
+                    <div class="p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                        <p class="font-bold text-sm text-green-900 mb-1">🔗 Stack Habits</p>
+                        <p class="text-xs text-green-800">Link new habits to existing ones. "After I brush my teeth, I will do 10 pushups." Use your current routine as triggers.</p>
+                    </div>
+                    <div class="p-3 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                        <p class="font-bold text-sm text-purple-900 mb-1">📅 Be Consistent</p>
+                        <p class="text-xs text-purple-800">Same time, same place. Consistency builds neural pathways. Don't aim for perfect - aim for consistent.</p>
+                    </div>
+                    <div class="p-3 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+                        <p class="font-bold text-sm text-amber-900 mb-1">🎉 Celebrate Wins</p>
+                        <p class="text-xs text-amber-800">Acknowledge your progress immediately after completing the habit. Positive reinforcement rewires your brain.</p>
+                    </div>
+                    <div class="p-3 bg-rose-50 rounded-lg border-l-4 border-rose-500">
+                        <p class="font-bold text-sm text-rose-900 mb-1">⏱️ The 66-Day Rule</p>
+                        <p class="text-xs text-rose-800">Research shows it takes an average of 66 days to form a new habit. Be patient with yourself during the formation phase!</p>
                     </div>
                 </div>
             </div>
@@ -2895,6 +3348,118 @@
                 </div>
             </div>
         </main>
+    </div>
+
+
+    <!-- Character Trait Modal -->
+    <div id="add-character-trait-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-black">Add Character Trait</h3>
+                <button onclick="hideCharacterTraitModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <p class="text-sm text-slate-600 mb-4">Select a character trait to develop</p>
+            <select id="character-trait-select" class="input-field mb-3">
+                <option value="">Choose a trait...</option>
+                <option value="Integrity">Integrity - Being honest and having strong moral principles</option>
+                <option value="Patience">Patience - Ability to wait calmly and persevere</option>
+                <option value="Kindness">Kindness - Being friendly, generous, and considerate</option>
+                <option value="Discipline">Discipline - Self-control and orderly conduct</option>
+                <option value="Humility">Humility - Freedom from pride or arrogance</option>
+                <option value="Courage">Courage - Strength to face fear and difficulty</option>
+                <option value="Gratitude">Gratitude - Quality of being thankful</option>
+                <option value="Self-Control">Self-Control - Restraint of one's impulses</option>
+                <option value="Perseverance">Perseverance - Continued effort despite difficulties</option>
+                <option value="Honesty">Honesty - Being truthful and sincere</option>
+                <option value="Compassion">Compassion - Sympathetic concern for others</option>
+                <option value="Wisdom">Wisdom - Experience, knowledge, and good judgment</option>
+            </select>
+            <textarea id="character-trait-why" class="textarea-field mb-3" placeholder="Why is this trait important to you?"></textarea>
+            <div class="mb-3">
+                <label class="text-xs font-bold text-slate-600 block mb-1">Daily Action Step</label>
+                <input type="text" id="character-trait-action" class="input-field" placeholder="e.g., Practice active listening">
+            </div>
+            <button onclick="saveCharacterTrait()" class="btn-primary">Add Trait</button>
+        </div>
+    </div>
+
+    <!-- Log Meal Modal -->
+    <div id="log-meal-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-black">Log Meal</h3>
+                <button onclick="hideLogMealModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <input type="text" id="meal-name" class="input-field mb-3" placeholder="Meal name (e.g., Chicken & Rice)">
+            <div class="grid grid-cols-3 gap-3 mb-3">
+                <div>
+                    <label class="text-xs font-bold text-slate-600 block mb-1">Protein (g)</label>
+                    <input type="number" id="meal-protein" class="input-field" placeholder="0">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-600 block mb-1">Carbs (g)</label>
+                    <input type="number" id="meal-carbs" class="input-field" placeholder="0">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-600 block mb-1">Fats (g)</label>
+                    <input type="number" id="meal-fats" class="input-field" placeholder="0">
+                </div>
+            </div>
+            <div class="p-3 bg-blue-50 rounded-lg mb-3">
+                <p class="text-xs font-bold text-blue-900 mb-1">Estimated Calories</p>
+                <p class="text-2xl font-black text-blue-600" id="meal-calories-preview">0</p>
+            </div>
+            <button onclick="saveMealLog()" class="btn-primary">Log Meal</button>
+        </div>
+    </div>
+
+    <!-- Log Workout Modal -->
+    <div id="log-workout-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-black">Log Workout</h3>
+                <button onclick="hideLogWorkoutModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <input type="text" id="workout-exercise" class="input-field mb-3" placeholder="Exercise name (e.g., Barbell Squat)">
+            <div class="grid grid-cols-3 gap-3 mb-3">
+                <div>
+                    <label class="text-xs font-bold text-slate-600 block mb-1">Sets</label>
+                    <input type="number" id="workout-sets" class="input-field" placeholder="3">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-600 block mb-1">Reps</label>
+                    <input type="number" id="workout-reps" class="input-field" placeholder="10">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-600 block mb-1">Weight (kg)</label>
+                    <input type="number" id="workout-weight" class="input-field" placeholder="60">
+                </div>
+            </div>
+            <textarea id="workout-notes" class="textarea-field mb-3" style="min-height: 60px;" placeholder="Notes (optional)"></textarea>
+            <button onclick="saveWorkoutLog()" class="btn-primary">Log Workout</button>
+        </div>
+    </div>
+
+    <!-- Workout Plan Detail Modal -->
+    <div id="workout-plan-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-black" id="workout-plan-title">Workout Plan</h3>
+                <button onclick="hideWorkoutPlanModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div id="workout-plan-details">
+                <!-- Plan details will be loaded here -->
+            </div>
+            <button onclick="hideWorkoutPlanModal()" class="btn-primary mt-4" style="background: #e2e8f0; color: #64748b;">Close</button>
+        </div>
     </div>
 
     <!-- Bottom Navigation -->
@@ -6846,6 +7411,716 @@ Keep recording your dreams to discover deeper patterns over time!
                 backgroundAudioEnabled = true;
             }
         });
+
+
+        // ===== CHARACTER DEVELOPMENT FUNCTIONS =====
+
+        function switchCharacterTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('[id^="char-tab-"]').forEach(btn => {
+                btn.classList.remove('bg-slate-900', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-700');
+            });
+            document.getElementById('char-tab-' + tab).classList.remove('bg-slate-100', 'text-slate-700');
+            document.getElementById('char-tab-' + tab).classList.add('bg-slate-900', 'text-white');
+            
+            // Update content
+            if (tab === 'traits') {
+                document.getElementById('character-traits-content').style.display = 'block';
+                document.getElementById('character-assessment-content').style.display = 'none';
+                loadCharacterTraits();
+            } else {
+                document.getElementById('character-traits-content').style.display = 'none';
+                document.getElementById('character-assessment-content').style.display = 'block';
+                loadAssessments();
+            }
+        }
+
+        function showAddCharacterTrait() {
+            document.getElementById('add-character-trait-modal').classList.add('active');
+        }
+
+        function hideCharacterTraitModal() {
+            document.getElementById('add-character-trait-modal').classList.remove('active');
+        }
+
+        function saveCharacterTrait() {
+            const traitName = document.getElementById('character-trait-select').value;
+            const why = document.getElementById('character-trait-why').value.trim();
+            const action = document.getElementById('character-trait-action').value.trim();
+            
+            if (!traitName || !why) {
+                alert('Please select a trait and explain why it\'s important');
+                return;
+            }
+            
+            const trait = {
+                id: Date.now(),
+                name: traitName,
+                why: why,
+                action: action,
+                progress: 0,
+                createdAt: new Date().toISOString(),
+                lastUpdated: new Date().toISOString()
+            };
+            
+            const traits = JSON.parse(localStorage.getItem('characterTraits') || '[]');
+            traits.push(trait);
+            localStorage.setItem('characterTraits', JSON.stringify(traits));
+            
+            // Reset form
+            document.getElementById('character-trait-select').value = '';
+            document.getElementById('character-trait-why').value = '';
+            document.getElementById('character-trait-action').value = '';
+            
+            hideCharacterTraitModal();
+            loadCharacterTraits();
+            alert('✓ Character trait added!');
+        }
+
+        function loadCharacterTraits() {
+            const traits = JSON.parse(localStorage.getItem('characterTraits') || '[]');
+            const container = document.getElementById('character-traits-list');
+            
+            if (!container) return;
+            
+            if (traits.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-500 text-center py-4">No character goals yet. Add one to start your journey!</p>';
+                return;
+            }
+            
+            container.innerHTML = traits.map(trait => `
+                <div class="p-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl" onclick="incrementTraitProgress(${trait.id})">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex-1">
+                            <p class="font-bold text-lg">${trait.name}</p>
+                            <p class="text-sm opacity-90 mt-1">${trait.why}</p>
+                            ${trait.action ? `<p class="text-xs opacity-75 mt-1">📌 ${trait.action}</p>` : ''}
+                        </div>
+                        <div class="text-center ml-3">
+                            <p class="text-3xl font-black">${trait.progress}%</p>
+                            <p class="text-xs opacity-75">progress</p>
+                        </div>
+                    </div>
+                    <div class="h-2 bg-white/30 rounded-full overflow-hidden">
+                        <div class="h-full bg-white transition-all duration-500" style="width: ${trait.progress}%"></div>
+                    </div>
+                    <p class="text-xs opacity-75 mt-2">Tap to increase progress (+5%)</p>
+                </div>
+            `).join('');
+        }
+
+        function incrementTraitProgress(traitId) {
+            const traits = JSON.parse(localStorage.getItem('characterTraits') || '[]');
+            const trait = traits.find(t => t.id === traitId);
+            
+            if (trait && trait.progress < 100) {
+                trait.progress = Math.min(100, trait.progress + 5);
+                trait.lastUpdated = new Date().toISOString();
+                localStorage.setItem('characterTraits', JSON.stringify(traits));
+                loadCharacterTraits();
+            } else if (trait && trait.progress >= 100) {
+                alert('🎉 Congratulations! You\'ve mastered this trait!');
+            }
+        }
+
+        function saveWeeklyAssessment() {
+            const growth = document.getElementById('assess-growth').value;
+            const trait = document.getElementById('assess-trait').value.trim();
+            const improve = document.getElementById('assess-improve').value.trim();
+            const challenges = document.getElementById('assess-challenges').value.trim();
+            const gratitude = document.getElementById('assess-gratitude').value.trim();
+            
+            if (!growth || !trait || !improve || !challenges || !gratitude) {
+                alert('Please complete all assessment questions');
+                return;
+            }
+            
+            const assessment = {
+                id: Date.now(),
+                growth: parseInt(growth),
+                trait: trait,
+                improve: improve,
+                challenges: challenges,
+                gratitude: gratitude,
+                date: new Date().toISOString()
+            };
+            
+            const assessments = JSON.parse(localStorage.getItem('weeklyAssessments') || '[]');
+            assessments.unshift(assessment);
+            localStorage.setItem('weeklyAssessments', JSON.stringify(assessments));
+            
+            // Reset form
+            document.getElementById('assess-growth').value = '';
+            document.getElementById('assess-trait').value = '';
+            document.getElementById('assess-improve').value = '';
+            document.getElementById('assess-challenges').value = '';
+            document.getElementById('assess-gratitude').value = '';
+            
+            loadAssessments();
+            alert('✓ Weekly assessment saved!');
+        }
+
+        function loadAssessments() {
+            const assessments = JSON.parse(localStorage.getItem('weeklyAssessments') || '[]');
+            
+            // Load growth metrics
+            const metricsContainer = document.getElementById('growth-metrics');
+            if (metricsContainer && assessments.length > 0) {
+                const avgGrowth = (assessments.reduce((sum, a) => sum + a.growth, 0) / assessments.length).toFixed(1);
+                metricsContainer.innerHTML = `
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="text-center">
+                            <p class="text-3xl font-black text-emerald-600">${avgGrowth}</p>
+                            <p class="text-xs text-emerald-800">Avg Growth Score</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-3xl font-black text-emerald-600">${assessments.length}</p>
+                            <p class="text-xs text-emerald-800">Assessments</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Load past assessments
+            const listContainer = document.getElementById('past-assessments-list');
+            if (listContainer) {
+                if (assessments.length === 0) {
+                    listContainer.innerHTML = '<p class="text-sm text-slate-500 text-center py-4">No assessments yet</p>';
+                    return;
+                }
+                
+                listContainer.innerHTML = assessments.slice(0, 5).map(a => `
+                    <div class="p-3 bg-slate-50 rounded-lg">
+                        <div class="flex justify-between items-center mb-1">
+                            <p class="font-bold text-sm text-slate-800">${new Date(a.date).toLocaleDateString()}</p>
+                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">${a.growth}/10</span>
+                        </div>
+                        <p class="text-xs text-slate-600">Trait: ${a.trait}</p>
+                        <p class="text-xs text-slate-600">Focus: ${a.improve}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // ===== GYM - NUTRITION FUNCTIONS =====
+
+        function switchGymTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.gym-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const tabButton = document.getElementById('gym-tab-' + tab);
+            if (tabButton) {
+                tabButton.classList.add('active');
+            }
+            
+            // Update content
+            document.querySelectorAll('.gym-tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            const tabContent = document.getElementById('gym-' + tab + '-content');
+            if (tabContent) {
+                tabContent.style.display = 'block';
+            }
+            
+            if (tab === 'nutrition') loadNutritionData();
+            if (tab === 'progress') loadProgressData();
+        }
+
+        function loadNutritionData() {
+            const today = new Date().toDateString();
+            const meals = JSON.parse(localStorage.getItem('meals') || '[]');
+            const todayMeals = meals.filter(m => new Date(m.date).toDateString() === today);
+            
+            // Calculate macros
+            const totalProtein = todayMeals.reduce((sum, m) => sum + (m.protein || 0), 0);
+            const totalCarbs = todayMeals.reduce((sum, m) => sum + (m.carbs || 0), 0);
+            const totalFats = todayMeals.reduce((sum, m) => sum + (m.fats || 0), 0);
+            const totalCalories = (totalProtein * 4) + (totalCarbs * 4) + (totalFats * 9);
+            
+            const proteinEl = document.getElementById('protein-today');
+            const carbsEl = document.getElementById('carbs-today');
+            const fatsEl = document.getElementById('fats-today');
+            const caloriesEl = document.getElementById('calories-today');
+            
+            if (proteinEl) proteinEl.textContent = totalProtein;
+            if (carbsEl) carbsEl.textContent = totalCarbs;
+            if (fatsEl) fatsEl.textContent = totalFats;
+            if (caloriesEl) caloriesEl.textContent = Math.round(totalCalories);
+            
+            // Water intake
+            const lastWaterDate = localStorage.getItem('lastWaterDate');
+            let waterCount = 0;
+            if (lastWaterDate === today) {
+                waterCount = parseInt(localStorage.getItem('waterToday') || '0');
+            }
+            const waterCountEl = document.getElementById('water-count');
+            const waterProgressEl = document.getElementById('water-progress');
+            if (waterCountEl) waterCountEl.textContent = waterCount;
+            if (waterProgressEl) waterProgressEl.style.width = ((waterCount / 8) * 100) + '%';
+            
+            // Eating streak
+            const eatingStreak = parseInt(localStorage.getItem('eatingStreak') || '0');
+            const streakEl = document.getElementById('eating-streak');
+            if (streakEl) streakEl.textContent = eatingStreak;
+            
+            // Meal history
+            loadMealHistory();
+        }
+
+        function addWaterGlass() {
+            const today = new Date().toDateString();
+            const lastWaterDate = localStorage.getItem('lastWaterDate');
+            
+            let waterCount = 0;
+            if (lastWaterDate === today) {
+                waterCount = parseInt(localStorage.getItem('waterToday') || '0');
+            }
+            
+            if (waterCount < 8) {
+                waterCount++;
+                localStorage.setItem('waterToday', waterCount.toString());
+                localStorage.setItem('lastWaterDate', today);
+                loadNutritionData();
+                
+                if (waterCount === 8) {
+                    alert('🎉 Great job! You\'ve reached your water goal for today!');
+                }
+            } else {
+                alert('You\'ve already reached your water goal for today!');
+            }
+        }
+
+        function showLogMealModal() {
+            document.getElementById('log-meal-modal').classList.add('active');
+            // Add real-time calorie calculation
+            ['meal-protein', 'meal-carbs', 'meal-fats'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', updateMealCaloriesPreview);
+                }
+            });
+        }
+
+        function hideLogMealModal() {
+            document.getElementById('log-meal-modal').classList.remove('active');
+        }
+
+        function updateMealCaloriesPreview() {
+            const protein = parseInt(document.getElementById('meal-protein').value) || 0;
+            const carbs = parseInt(document.getElementById('meal-carbs').value) || 0;
+            const fats = parseInt(document.getElementById('meal-fats').value) || 0;
+            const calories = (protein * 4) + (carbs * 4) + (fats * 9);
+            const previewEl = document.getElementById('meal-calories-preview');
+            if (previewEl) {
+                previewEl.textContent = Math.round(calories);
+            }
+        }
+
+        function saveMealLog() {
+            const name = document.getElementById('meal-name').value.trim();
+            const protein = parseInt(document.getElementById('meal-protein').value) || 0;
+            const carbs = parseInt(document.getElementById('meal-carbs').value) || 0;
+            const fats = parseInt(document.getElementById('meal-fats').value) || 0;
+            
+            if (!name) {
+                alert('Please enter a meal name');
+                return;
+            }
+            
+            const meal = {
+                id: Date.now(),
+                name: name,
+                protein: protein,
+                carbs: carbs,
+                fats: fats,
+                calories: (protein * 4) + (carbs * 4) + (fats * 9),
+                date: new Date().toISOString()
+            };
+            
+            const meals = JSON.parse(localStorage.getItem('meals') || '[]');
+            meals.unshift(meal);
+            localStorage.setItem('meals', JSON.stringify(meals));
+            
+            // Update eating streak
+            updateEatingStreak();
+            
+            // Reset form
+            document.getElementById('meal-name').value = '';
+            document.getElementById('meal-protein').value = '';
+            document.getElementById('meal-carbs').value = '';
+            document.getElementById('meal-fats').value = '';
+            
+            hideLogMealModal();
+            loadNutritionData();
+            alert('✓ Meal logged successfully!');
+        }
+
+        function updateEatingStreak() {
+            const today = new Date().toDateString();
+            const lastMealDate = localStorage.getItem('lastMealDate');
+            const currentStreak = parseInt(localStorage.getItem('eatingStreak') || '0');
+            
+            if (lastMealDate === today) {
+                return; // Already logged today
+            }
+            
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+            if (lastMealDate === yesterday) {
+                localStorage.setItem('eatingStreak', (currentStreak + 1).toString());
+            } else if (lastMealDate !== today) {
+                localStorage.setItem('eatingStreak', '1');
+            }
+            
+            localStorage.setItem('lastMealDate', today);
+        }
+
+        function loadMealHistory() {
+            const meals = JSON.parse(localStorage.getItem('meals') || '[]');
+            const container = document.getElementById('meal-history');
+            
+            if (!container) return;
+            
+            if (meals.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-500 text-center py-4">No meals logged today</p>';
+                return;
+            }
+            
+            container.innerHTML = meals.slice(0, 10).map(meal => `
+                <div class="p-3 bg-slate-50 rounded-lg">
+                    <div class="flex justify-between items-start mb-1">
+                        <p class="font-bold text-sm text-slate-800">${meal.name}</p>
+                        <p class="text-xs text-slate-500">${new Date(meal.date).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</p>
+                    </div>
+                    <div class="flex gap-3 text-xs">
+                        <span class="text-red-600 font-bold">P: ${meal.protein}g</span>
+                        <span class="text-blue-600 font-bold">C: ${meal.carbs}g</span>
+                        <span class="text-amber-600 font-bold">F: ${meal.fats}g</span>
+                        <span class="text-slate-600 font-bold">${Math.round(meal.calories)} cal</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== GYM - WORKOUT FUNCTIONS =====
+
+        const workoutPlans = {
+            'beginner-gym': {
+                name: 'Beginner - Gym',
+                description: '3 days/week full body workout designed to build foundation strength',
+                days: [
+                    {
+                        name: 'Day 1: Full Body A',
+                        exercises: ['Squat 3x10', 'Bench Press 3x10', 'Lat Pulldown 3x10', 'Leg Curl 3x12', 'Plank 3x30s']
+                    },
+                    {
+                        name: 'Day 2: Full Body B',
+                        exercises: ['Deadlift 3x8', 'Overhead Press 3x10', 'Barbell Row 3x10', 'Leg Press 3x12', 'Bicycle Crunches 3x15']
+                    },
+                    {
+                        name: 'Day 3: Full Body C',
+                        exercises: ['Front Squat 3x10', 'Incline Press 3x10', 'Pull-ups 3x8', 'Lunges 3x10 each', 'Cable Crunches 3x15']
+                    }
+                ]
+            },
+            'beginner-home': {
+                name: 'Beginner - Home',
+                description: '3 days/week bodyweight workout requiring no equipment',
+                days: [
+                    {
+                        name: 'Day 1: Upper Body',
+                        exercises: ['Push-ups 3x10', 'Pike Push-ups 3x8', 'Inverted Rows 3x10', 'Tricep Dips 3x10', 'Plank 3x30s']
+                    },
+                    {
+                        name: 'Day 2: Lower Body',
+                        exercises: ['Bodyweight Squats 3x15', 'Bulgarian Split Squats 3x10', 'Glute Bridges 3x15', 'Calf Raises 3x20', 'Wall Sit 3x45s']
+                    },
+                    {
+                        name: 'Day 3: Full Body',
+                        exercises: ['Burpees 3x10', 'Mountain Climbers 3x20', 'Jump Squats 3x12', 'Push-ups 3x12', 'Leg Raises 3x15']
+                    }
+                ]
+            },
+            'intermediate-gym': {
+                name: 'Intermediate - Gym',
+                description: '4 days/week Push/Pull/Legs split for muscle building',
+                days: [
+                    {
+                        name: 'Push Day',
+                        exercises: ['Bench Press 4x8', 'Overhead Press 4x10', 'Incline Dumbbell Press 3x12', 'Lateral Raises 3x15', 'Tricep Pushdown 3x12']
+                    },
+                    {
+                        name: 'Pull Day',
+                        exercises: ['Deadlift 4x6', 'Pull-ups 4x10', 'Barbell Row 4x10', 'Face Pulls 3x15', 'Bicep Curls 3x12']
+                    },
+                    {
+                        name: 'Legs Day',
+                        exercises: ['Squat 4x8', 'Romanian Deadlift 4x10', 'Leg Press 3x12', 'Leg Curl 3x12', 'Calf Raises 4x15']
+                    },
+                    {
+                        name: 'Upper Body',
+                        exercises: ['Dumbbell Press 4x10', 'Cable Rows 4x12', 'Dips 3x12', 'Dumbbell Curls 3x12', 'Core Circuit']
+                    }
+                ]
+            },
+            'intermediate-home': {
+                name: 'Intermediate - Home',
+                description: '4 days/week with resistance bands',
+                days: [
+                    {
+                        name: 'Upper Push',
+                        exercises: ['Band Chest Press 4x12', 'Band Shoulder Press 4x12', 'Diamond Push-ups 3x15', 'Band Lateral Raises 3x15']
+                    },
+                    {
+                        name: 'Upper Pull',
+                        exercises: ['Band Rows 4x12', 'Band Pull-aparts 4x15', 'Pull-ups/Negatives 4x8', 'Band Bicep Curls 3x15']
+                    },
+                    {
+                        name: 'Lower Body',
+                        exercises: ['Band Squats 4x15', 'Band RDLs 4x12', 'Band Glute Bridges 4x15', 'Band Leg Curls 3x15']
+                    },
+                    {
+                        name: 'Full Body HIIT',
+                        exercises: ['Burpees 4x10', 'Jump Squats 4x12', 'Mountain Climbers 4x20', 'Push-up to T 3x10']
+                    }
+                ]
+            },
+            'advanced-gym': {
+                name: 'Advanced - Gym',
+                description: '5-6 days/week split routine for maximum muscle growth',
+                days: [
+                    {
+                        name: 'Chest',
+                        exercises: ['Flat Bench 5x5', 'Incline Press 4x8', 'Cable Flyes 4x12', 'Dips 4x10', 'Pushups AMRAP']
+                    },
+                    {
+                        name: 'Back',
+                        exercises: ['Deadlift 5x5', 'Pull-ups 4x10', 'Barbell Row 4x8', 'Lat Pulldown 4x12', 'Face Pulls 4x15']
+                    },
+                    {
+                        name: 'Legs',
+                        exercises: ['Squat 5x5', 'Front Squat 4x8', 'RDL 4x10', 'Leg Press 4x12', 'Calf Raises 5x15']
+                    },
+                    {
+                        name: 'Shoulders',
+                        exercises: ['OHP 5x5', 'Arnold Press 4x10', 'Lateral Raises 5x12', 'Rear Delt Flyes 4x15', 'Shrugs 4x12']
+                    },
+                    {
+                        name: 'Arms',
+                        exercises: ['Close Grip Bench 4x8', 'Weighted Dips 4x10', 'Barbell Curl 4x8', 'Hammer Curls 4x12', 'Cable Work']
+                    },
+                    {
+                        name: 'Optional: Full Body',
+                        exercises: ['Power Cleans 5x3', 'Front Squats 4x6', 'Weighted Pull-ups 4x6', 'Push Press 4x6']
+                    }
+                ]
+            },
+            'advanced-home': {
+                name: 'Advanced - Home',
+                description: '5-6 days/week HIIT + Strength training',
+                days: [
+                    {
+                        name: 'HIIT Upper',
+                        exercises: ['Explosive Push-ups 5x10', 'Pull-up Variations 5x8', 'Pike Push-ups 4x12', 'Burpees 4x15']
+                    },
+                    {
+                        name: 'HIIT Lower',
+                        exercises: ['Jump Squats 5x12', 'Bulgarian Splits 4x10', 'Box Jumps 5x10', 'Sprint Intervals 10x30s']
+                    },
+                    {
+                        name: 'Strength Upper',
+                        exercises: ['Weighted Push-ups 5x12', 'Weighted Pull-ups 5x8', 'Handstand Practice', 'Dips 4x15']
+                    },
+                    {
+                        name: 'Strength Lower',
+                        exercises: ['Pistol Squats 5x5', 'Single Leg RDL 4x10', 'Nordic Curls 4x6', 'Calf Jumps 5x15']
+                    },
+                    {
+                        name: 'Full Body Circuit',
+                        exercises: ['Burpee Pull-ups 5x8', 'Pistol Squats 4x5', 'Handstand Push-ups 4x8', 'Core Circuit']
+                    },
+                    {
+                        name: 'Active Recovery',
+                        exercises: ['Yoga Flow 30min', 'Mobility Work', 'Light Cardio', 'Stretching']
+                    }
+                ]
+            }
+        };
+
+        function showWorkoutPlan(planId) {
+            const plan = workoutPlans[planId];
+            if (!plan) return;
+            
+            const titleEl = document.getElementById('workout-plan-title');
+            if (titleEl) {
+                titleEl.textContent = plan.name;
+            }
+            
+            const detailsHTML = `
+                <p class="text-sm text-slate-600 mb-4">${plan.description}</p>
+                <div class="space-y-3">
+                    ${plan.days.map((day, index) => `
+                        <div class="p-4 bg-slate-50 rounded-xl">
+                            <p class="font-bold text-sm text-slate-900 mb-2">${day.name}</p>
+                            <ul class="space-y-1">
+                                ${day.exercises.map(ex => `
+                                    <li class="text-xs text-slate-700 flex items-center">
+                                        <span class="w-2 h-2 bg-indigo-600 rounded-full mr-2"></span>
+                                        ${ex}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            const detailsEl = document.getElementById('workout-plan-details');
+            if (detailsEl) {
+                detailsEl.innerHTML = detailsHTML;
+            }
+            document.getElementById('workout-plan-modal').classList.add('active');
+        }
+
+        function hideWorkoutPlanModal() {
+            document.getElementById('workout-plan-modal').classList.remove('active');
+        }
+
+        function showLogWorkoutModal() {
+            document.getElementById('log-workout-modal').classList.add('active');
+        }
+
+        function hideLogWorkoutModal() {
+            document.getElementById('log-workout-modal').classList.remove('active');
+        }
+
+        function saveWorkoutLog() {
+            const exercise = document.getElementById('workout-exercise').value.trim();
+            const sets = parseInt(document.getElementById('workout-sets').value) || 0;
+            const reps = parseInt(document.getElementById('workout-reps').value) || 0;
+            const weight = parseInt(document.getElementById('workout-weight').value) || 0;
+            const notes = document.getElementById('workout-notes').value.trim();
+            
+            if (!exercise || sets === 0 || reps === 0) {
+                alert('Please fill in exercise name, sets, and reps');
+                return;
+            }
+            
+            const workout = {
+                id: Date.now(),
+                exercise: exercise,
+                sets: sets,
+                reps: reps,
+                weight: weight,
+                notes: notes,
+                volume: sets * reps * weight, // Training volume
+                date: new Date().toISOString()
+            };
+            
+            const workouts = JSON.parse(localStorage.getItem('workouts') || '[]');
+            workouts.unshift(workout);
+            localStorage.setItem('workouts', JSON.stringify(workouts));
+            
+            // Reset form
+            document.getElementById('workout-exercise').value = '';
+            document.getElementById('workout-sets').value = '';
+            document.getElementById('workout-reps').value = '';
+            document.getElementById('workout-weight').value = '';
+            document.getElementById('workout-notes').value = '';
+            
+            hideLogWorkoutModal();
+            loadProgressData();
+            alert('✓ Workout logged successfully!');
+        }
+
+        function loadProgressData() {
+            const workouts = JSON.parse(localStorage.getItem('workouts') || '[]');
+            
+            // Group by exercise
+            const exerciseData = {};
+            workouts.forEach(w => {
+                if (!exerciseData[w.exercise]) {
+                    exerciseData[w.exercise] = [];
+                }
+                exerciseData[w.exercise].push(w);
+            });
+            
+            // Calculate weekly progress
+            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+            const thisWeek = workouts.filter(w => new Date(w.date) > weekAgo);
+            
+            const progressContainer = document.getElementById('weekly-progress');
+            if (progressContainer && thisWeek.length > 0) {
+                const totalVolume = thisWeek.reduce((sum, w) => sum + w.volume, 0);
+                progressContainer.innerHTML = `
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="text-center">
+                            <p class="text-2xl font-black text-emerald-600">${thisWeek.length}</p>
+                            <p class="text-xs text-emerald-800">Workouts</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-2xl font-black text-emerald-600">${Math.round(totalVolume / 1000)}k</p>
+                            <p class="text-xs text-emerald-800">Total Volume (kg)</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Display exercise progress
+            const exerciseList = document.getElementById('exercise-progress-list');
+            if (exerciseList) {
+                if (Object.keys(exerciseData).length === 0) {
+                    exerciseList.innerHTML = '<p class="text-sm text-slate-500 text-center py-4">Log workouts to track progress</p>';
+                } else {
+                    exerciseList.innerHTML = Object.entries(exerciseData).slice(0, 5).map(([exercise, logs]) => {
+                        const latest = logs[0];
+                        const previous = logs[1];
+                        let change = '';
+                        if (previous && latest.weight > previous.weight) {
+                            change = `<span class="text-green-600 text-xs font-bold">↑ +${latest.weight - previous.weight}kg</span>`;
+                        }
+                        return `
+                            <div class="p-3 bg-slate-50 rounded-lg">
+                                <div class="flex justify-between items-start mb-1">
+                                    <p class="font-bold text-sm text-slate-800">${exercise}</p>
+                                    ${change}
+                                </div>
+                                <p class="text-xs text-slate-600">${latest.sets}x${latest.reps} @ ${latest.weight}kg</p>
+                                <p class="text-xs text-slate-500">${logs.length} session${logs.length > 1 ? 's' : ''} logged</p>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+            
+            // Workout history
+            loadWorkoutHistory();
+        }
+
+        function loadWorkoutHistory() {
+            const workouts = JSON.parse(localStorage.getItem('workouts') || '[]');
+            const container = document.getElementById('workout-history-list');
+            
+            if (!container) return;
+            
+            if (workouts.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-500 text-center py-4">No workouts logged yet</p>';
+                return;
+            }
+            
+            container.innerHTML = workouts.slice(0, 10).map(workout => `
+                <div class="p-3 bg-slate-50 rounded-lg">
+                    <div class="flex justify-between items-start mb-1">
+                        <p class="font-bold text-sm text-slate-800">${workout.exercise}</p>
+                        <p class="text-xs text-slate-500">${new Date(workout.date).toLocaleDateString()}</p>
+                    </div>
+                    <p class="text-xs text-slate-600">${workout.sets}x${workout.reps} @ ${workout.weight}kg</p>
+                    ${workout.notes ? `<p class="text-xs text-slate-500 mt-1">${workout.notes}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
     </script>
 </body>
 </html>
