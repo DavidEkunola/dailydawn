@@ -363,6 +363,95 @@
             background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 100%);
             transition: width 0.3s;
         }
+        .bible-tab {
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .bible-tab.active {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+        }
+        .bible-tab:not(.active) {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .bible-tab-content {
+            display: none;
+        }
+        .bible-tab-content.active {
+            display: block;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .bible-book-button {
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .bible-book-button:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        .bible-book-button.active {
+            background: #0f172a;
+            color: white;
+            border-color: #0f172a;
+        }
+        .bible-chapter-button {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .bible-chapter-button:hover {
+            background: #f1f5f9;
+        }
+        .bible-chapter-button.active {
+            background: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+        }
+        .bible-verse {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .bible-verse:last-child {
+            border-bottom: none;
+        }
+        .verse-number {
+            display: inline-block;
+            min-width: 30px;
+            font-weight: bold;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        .verse-text-bible {
+            display: inline;
+            line-height: 1.8;
+            font-family: 'Crimson Text', serif;
+            font-size: 1.05rem;
+        }
         .book-status-badge {
             display: inline-block;
             padding: 0.25rem 0.75rem;
@@ -1029,182 +1118,299 @@
             </div>
         </header>
 
-        <main class="p-5 -mt-6">
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-star text-amber-500"></i>
-                    Your Personalized Verse
-                </div>
-                <p class="verse-text mb-2" id="bible-verse-display"></p>
-                <p class="text-xs font-bold text-slate-500" id="bible-verse-ref"></p>
+        <!-- Bible Navigation Tabs -->
+        <div class="sticky top-0 z-10 bg-white p-5 -mt-6">
+            <div class="flex gap-2 mb-4 overflow-x-auto pb-2" style="scrollbar-width: none;">
+                <button class="bible-tab active" onclick="switchBibleTab('daily')" id="bible-tab-daily">
+                    <i class="fa-solid fa-star"></i> Daily
+                </button>
+                <button class="bible-tab" onclick="switchBibleTab('read')" id="bible-tab-read">
+                    <i class="fa-solid fa-book-open"></i> Read
+                </button>
+                <button class="bible-tab" onclick="switchBibleTab('audio')" id="bible-tab-audio">
+                    <i class="fa-solid fa-headphones"></i> Audio
+                </button>
+                <button class="bible-tab" onclick="switchBibleTab('prayer')" id="bible-tab-prayer">
+                    <i class="fa-solid fa-hands-praying"></i> Prayer
+                </button>
             </div>
+        </div>
 
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-lightbulb text-yellow-500"></i>
-                    Quick Devotional Tips
+        <!-- Daily Tab Content -->
+        <div id="bible-content-daily" class="bible-tab-content active">
+            <main class="p-5">
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-star text-amber-500"></i>
+                        Your Personalized Verse
+                    </div>
+                    <p class="verse-text mb-2" id="bible-verse-display"></p>
+                    <p class="text-xs font-bold text-slate-500" id="bible-verse-ref"></p>
                 </div>
-                <div class="space-y-2 text-sm text-slate-600">
-                    <div class="tip-card">
-                        <p class="font-bold text-amber-800 mb-1">Start with Prayer</p>
-                        <p class="text-xs text-amber-900">Ask God to open your heart and mind before reading scripture.</p>
-                    </div>
-                    <div class="tip-card">
-                        <p class="font-bold text-amber-800 mb-1">Read with Context</p>
-                        <p class="text-xs text-amber-900">Understand the historical and cultural background of the passage.</p>
-                    </div>
-                    <div class="tip-card">
-                        <p class="font-bold text-amber-800 mb-1">Apply Daily</p>
-                        <p class="text-xs text-amber-900">Ask: "How does this verse apply to my life today?"</p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Audio Features -->
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-headphones text-purple-600"></i>
-                    AUDIO BIBLE
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-lightbulb text-yellow-500"></i>
+                        Quick Devotional Tips
+                    </div>
+                    <div class="space-y-2 text-sm text-slate-600">
+                        <div class="tip-card">
+                            <p class="font-bold text-amber-800 mb-1">Start with Prayer</p>
+                            <p class="text-xs text-amber-900">Ask God to open your heart and mind before reading scripture.</p>
+                        </div>
+                        <div class="tip-card">
+                            <p class="font-bold text-amber-800 mb-1">Read with Context</p>
+                            <p class="text-xs text-amber-900">Understand the historical and cultural background of the passage.</p>
+                        </div>
+                        <div class="tip-card">
+                            <p class="font-bold text-amber-800 mb-1">Apply Daily</p>
+                            <p class="text-xs text-amber-900">Ask: "How does this verse apply to my life today?"</p>
+                        </div>
+                    </div>
                 </div>
-                <p class="text-sm text-slate-600 mb-3">Listen while you work or workout</p>
-                <div class="space-y-3">
-                    <button onclick="playAudioVerse()" class="w-full p-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl flex items-center justify-center gap-3 hover:opacity-90 transition active:scale-95">
-                        <i class="fa-solid fa-play"></i>
-                        <span class="font-bold">Listen to Daily Verse</span>
+            </main>
+        </div>
+
+        <!-- Read Bible Tab Content -->
+        <div id="bible-content-read" class="bible-tab-content">
+            <main class="p-5">
+                <!-- Testament Selection -->
+                <div class="flex gap-2 mb-4">
+                    <button onclick="switchTestament('old')" id="testament-old" class="flex-1 p-3 bg-slate-800 text-white rounded-xl font-bold text-sm active:scale-95 transition">
+                        Old Testament
                     </button>
-                    <button onclick="playAudioDevotional()" class="w-full p-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl flex items-center justify-center gap-3 hover:opacity-90 transition active:scale-95">
-                        <i class="fa-solid fa-microphone"></i>
-                        <span class="font-bold">Audio Devotional</span>
+                    <button onclick="switchTestament('new')" id="testament-new" class="flex-1 p-3 bg-slate-200 text-slate-600 rounded-xl font-bold text-sm active:scale-95 transition">
+                        New Testament
                     </button>
-                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                </div>
+
+                <!-- Books Grid -->
+                <div class="content-card mb-4">
+                    <div class="section-title">
+                        <i class="fa-solid fa-book text-blue-600"></i>
+                        <span>Select a Book</span>
+                    </div>
+                    <div id="bible-books-grid" class="grid grid-cols-2 gap-2">
+                        <!-- Books will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Chapters Selection -->
+                <div id="chapters-section" class="content-card mb-4" style="display: none;">
+                    <div class="section-title">
+                        <i class="fa-solid fa-list-ol text-purple-600"></i>
+                        <span id="selected-book-name">Select a Chapter</span>
+                    </div>
+                    <div id="bible-chapters-grid" class="grid grid-cols-6 gap-2">
+                        <!-- Chapters will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Bible Reading View -->
+                <div id="bible-reading-section" class="content-card" style="display: none;">
+                    <div class="flex justify-between items-center mb-4">
+                        <button onclick="closeBibleReading()" class="text-slate-600 hover:text-slate-800">
+                            <i class="fa-solid fa-arrow-left mr-2"></i>Back
+                        </button>
+                        <div class="text-center flex-1">
+                            <p class="font-bold text-slate-800" id="reading-book-name">Genesis 1</p>
+                            <p class="text-xs text-slate-500" id="reading-version">King James Version</p>
+                        </div>
+                        <button onclick="toggleBibleSettings()" class="text-slate-600 hover:text-slate-800">
+                            <i class="fa-solid fa-cog"></i>
+                        </button>
+                    </div>
+
+                    <!-- Reading Settings -->
+                    <div id="bible-settings" class="mb-4 p-3 bg-slate-50 rounded-xl" style="display: none;">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-bold text-slate-700">Font Size</span>
+                            <div class="flex gap-2">
+                                <button onclick="adjustFontSize(-1)" class="w-8 h-8 rounded bg-white border border-slate-300 flex items-center justify-center">
+                                    <i class="fa-solid fa-minus text-xs"></i>
+                                </button>
+                                <button onclick="adjustFontSize(1)" class="w-8 h-8 rounded bg-white border border-slate-300 flex items-center justify-center">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bible Verses -->
+                    <div id="bible-verses-container" class="space-y-1">
+                        <!-- Verses will be displayed here -->
+                    </div>
+
+                    <!-- Chapter Navigation -->
+                    <div class="flex justify-between items-center mt-6">
+                        <button onclick="previousChapter()" id="prev-chapter-btn" class="flex-1 p-3 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm active:scale-95 transition mr-2">
+                            <i class="fa-solid fa-chevron-left mr-2"></i>Previous
+                        </button>
+                        <button onclick="nextChapter()" id="next-chapter-btn" class="flex-1 p-3 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm active:scale-95 transition ml-2">
+                            Next<i class="fa-solid fa-chevron-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Audio Bible Tab Content -->
+        <div id="bible-content-audio" class="bible-tab-content">
+            <main class="p-5">
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-headphones text-purple-600"></i>
+                        AUDIO BIBLE
+                    </div>
+                    <p class="text-sm text-slate-600 mb-3">Listen while you work or workout</p>
+                    <div class="space-y-3">
+                        <button onclick="playAudioVerse()" class="w-full p-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl flex items-center justify-center gap-3 hover:opacity-90 transition active:scale-95">
+                            <i class="fa-solid fa-play"></i>
+                            <span class="font-bold">Listen to Daily Verse</span>
+                        </button>
+                        <button onclick="playAudioDevotional()" class="w-full p-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl flex items-center justify-center gap-3 hover:opacity-90 transition active:scale-95">
+                            <i class="fa-solid fa-microphone"></i>
+                            <span class="font-bold">Audio Devotional</span>
+                        </button>
+                        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-volume-up text-indigo-600"></i>
+                                <span class="text-sm font-bold text-slate-700">Background Audio</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="background-audio-toggle" class="sr-only peer" onchange="toggleBackgroundAudio()">
+                                <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Prayer Request Tab Content -->
+        <div id="bible-content-prayer" class="bible-tab-content">
+            <main class="p-5">
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-hands-praying text-blue-600"></i>
+                        PRAYER REQUESTS
+                    </div>
+                    <p class="text-sm text-slate-600 mb-3">Track your prayers and see God's faithfulness</p>
+                    
+                    <!-- Add Prayer Request -->
+                    <div class="mb-4">
+                        <input id="prayer-request-title" class="input-field mb-2" placeholder="What are you praying for?">
+                        <textarea id="prayer-request-details" class="textarea-field mb-2" style="min-height: 80px;" placeholder="Additional details (optional)..."></textarea>
+                        <button onclick="addPrayerRequest()" class="btn-primary">
+                            <i class="fa-solid fa-plus mr-2"></i>Add Prayer Request
+                        </button>
+                    </div>
+
+                    <!-- Prayer Reminder -->
+                    <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl mb-4">
                         <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-volume-up text-indigo-600"></i>
-                            <span class="text-sm font-bold text-slate-700">Background Audio</span>
+                            <i class="fa-solid fa-bell text-blue-600"></i>
+                            <span class="text-sm font-bold text-blue-900">Daily Prayer Reminder</span>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="background-audio-toggle" class="sr-only peer" onchange="toggleBackgroundAudio()">
-                            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                            <input type="checkbox" id="prayer-reminder-toggle" class="sr-only peer" onchange="togglePrayerReminder()">
+                            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                         </label>
                     </div>
-                </div>
-            </div>
 
-            <!-- Prayer Requests Tracker -->
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-hands-praying text-blue-600"></i>
-                    PRAYER REQUESTS
-                </div>
-                <p class="text-sm text-slate-600 mb-3">Track your prayers and see God's faithfulness</p>
-                
-                <!-- Add Prayer Request -->
-                <div class="mb-4">
-                    <input id="prayer-request-title" class="input-field mb-2" placeholder="What are you praying for?">
-                    <textarea id="prayer-request-details" class="textarea-field mb-2" style="min-height: 80px;" placeholder="Additional details (optional)..."></textarea>
-                    <button onclick="addPrayerRequest()" class="btn-primary">
-                        <i class="fa-solid fa-plus mr-2"></i>Add Prayer Request
-                    </button>
-                </div>
-
-                <!-- Prayer Reminder -->
-                <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl mb-4">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-bell text-blue-600"></i>
-                        <span class="text-sm font-bold text-blue-900">Daily Prayer Reminder</span>
+                    <!-- Active Prayer Requests -->
+                    <div id="active-prayers" class="space-y-2 mb-3">
+                        <!-- Prayer requests will be added here -->
                     </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="prayer-reminder-toggle" class="sr-only peer" onchange="togglePrayerReminder()">
-                        <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                    </label>
-                </div>
 
-                <!-- Active Prayer Requests -->
-                <div id="active-prayers" class="space-y-2 mb-3">
-                    <!-- Prayer requests will be added here -->
-                </div>
-
-                <!-- Answered Prayers -->
-                <div class="mt-4">
-                    <button onclick="toggleAnsweredPrayers()" class="w-full text-left p-3 bg-green-50 rounded-xl flex items-center justify-between hover:bg-green-100 transition">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-check-circle text-green-600"></i>
-                            <span class="text-sm font-bold text-green-900">Answered Prayers</span>
-                            <span class="text-xs text-green-700 font-bold" id="answered-prayers-count">(0)</span>
+                    <!-- Answered Prayers -->
+                    <div class="mt-4">
+                        <button onclick="toggleAnsweredPrayers()" class="w-full text-left p-3 bg-green-50 rounded-xl flex items-center justify-between hover:bg-green-100 transition">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-check-circle text-green-600"></i>
+                                <span class="text-sm font-bold text-green-900">Answered Prayers</span>
+                                <span class="text-xs text-green-700 font-bold" id="answered-prayers-count">(0)</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down text-green-600" id="answered-prayers-chevron"></i>
+                        </button>
+                        <div id="answered-prayers" class="hidden mt-2 space-y-2">
+                            <!-- Answered prayers will be shown here -->
                         </div>
-                        <i class="fa-solid fa-chevron-down text-green-600" id="answered-prayers-chevron"></i>
-                    </button>
-                    <div id="answered-prayers" class="hidden mt-2 space-y-2">
-                        <!-- Answered prayers will be shown here -->
                     </div>
                 </div>
-            </div>
+            </main>
+        </div>
 
-            <!-- Fasting Tracker -->
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-clock text-indigo-600"></i>
-                    FASTING TRACKER
-                </div>
-                <p class="text-sm text-slate-600 mb-3">Track your intermittent fasting journey</p>
-                
-                <!-- Fasting Timer -->
-                <div class="p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 mb-3">
-                    <div class="text-center mb-3">
-                        <p class="text-4xl font-black text-indigo-900 mb-1" id="fasting-timer">00:00:00</p>
-                        <p class="text-xs text-indigo-700 font-bold" id="fasting-status">Not Fasting</p>
+        <!-- Fasting Tracker Tab Content -->
+        <div id="bible-content-fasting" class="bible-tab-content">
+            <main class="p-5">
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-clock text-indigo-600"></i>
+                        FASTING TRACKER
                     </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="startFast()" id="start-fast-btn" class="p-3 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition active:scale-95">
-                            <i class="fa-solid fa-play mr-1"></i>Start Fast
+                    <p class="text-sm text-slate-600 mb-3">Track your intermittent fasting journey</p>
+                    
+                    <!-- Fasting Timer -->
+                    <div class="p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 mb-3">
+                        <div class="text-center mb-3">
+                            <p class="text-4xl font-black text-indigo-900 mb-1" id="fasting-timer">00:00:00</p>
+                            <p class="text-xs text-indigo-700 font-bold" id="fasting-status">Not Fasting</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="startFast()" id="start-fast-btn" class="p-3 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition active:scale-95">
+                                <i class="fa-solid fa-play mr-1"></i>Start Fast
+                            </button>
+                            <button onclick="endFast()" id="end-fast-btn" class="p-3 bg-green-600 text-white rounded-lg font-bold text-sm hover:bg-green-700 transition active:scale-95 hidden">
+                                <i class="fa-solid fa-stop mr-1"></i>End Fast
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Fasting Presets -->
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Quick Start</p>
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <button onclick="setFastingGoal(16)" class="p-3 bg-white border-2 border-slate-200 rounded-lg hover:border-indigo-600 hover:bg-indigo-50 transition">
+                            <p class="font-black text-slate-900">16:8</p>
+                            <p class="text-xs text-slate-600">Popular</p>
                         </button>
-                        <button onclick="endFast()" id="end-fast-btn" class="p-3 bg-green-600 text-white rounded-lg font-bold text-sm hover:bg-green-700 transition active:scale-95 hidden">
-                            <i class="fa-solid fa-stop mr-1"></i>End Fast
+                        <button onclick="setFastingGoal(18)" class="p-3 bg-white border-2 border-slate-200 rounded-lg hover:border-indigo-600 hover:bg-indigo-50 transition">
+                            <p class="font-black text-slate-900">18:6</p>
+                            <p class="text-xs text-slate-600">Advanced</p>
                         </button>
+                        <button onclick="setFastingGoal(24)" class="p-3 bg-white border-2 border-slate-200 rounded-lg hover:border-indigo-600 hover:bg-indigo-50 transition">
+                            <p class="font-black text-slate-900">24hr</p>
+                            <p class="text-xs text-slate-600">Extended</p>
+                        </button>
+                    </div>
+
+                    <!-- Fasting History -->
+                    <div id="fasting-history" class="space-y-2">
+                        <!-- Fasting entries will be added here -->
                     </div>
                 </div>
 
-                <!-- Fasting Presets -->
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Quick Start</p>
-                <div class="grid grid-cols-3 gap-2 mb-3">
-                    <button onclick="setFastingGoal(16)" class="p-3 bg-white border-2 border-slate-200 rounded-lg hover:border-indigo-600 hover:bg-indigo-50 transition">
-                        <p class="font-black text-slate-900">16:8</p>
-                        <p class="text-xs text-slate-600">Popular</p>
-                    </button>
-                    <button onclick="setFastingGoal(18)" class="p-3 bg-white border-2 border-slate-200 rounded-lg hover:border-indigo-600 hover:bg-indigo-50 transition">
-                        <p class="font-black text-slate-900">18:6</p>
-                        <p class="text-xs text-slate-600">Advanced</p>
-                    </button>
-                    <button onclick="setFastingGoal(24)" class="p-3 bg-white border-2 border-slate-200 rounded-lg hover:border-indigo-600 hover:bg-indigo-50 transition">
-                        <p class="font-black text-slate-900">24hr</p>
-                        <p class="text-xs text-slate-600">Extended</p>
-                    </button>
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-pen text-blue-600"></i>
+                        What I Learned Today
+                    </div>
+                    <textarea id="bible-learning" class="textarea-field" placeholder="Write your reflection, insights, or what God is teaching you today..."></textarea>
+                    <button onclick="saveBibleEntry()" class="btn-primary mt-4">Save Reflection</button>
                 </div>
 
-                <!-- Fasting History -->
-                <div id="fasting-history" class="space-y-2">
-                    <!-- Fasting entries will be added here -->
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-clock-rotate-left text-slate-500"></i>
+                        Recent Reflections
+                    </div>
+                    <div id="bible-entries"></div>
                 </div>
-            </div>
+            </main>
+        </div>
+    </div>
 
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-pen text-blue-600"></i>
-                    What I Learned Today
-                </div>
-                <textarea id="bible-learning" class="textarea-field" placeholder="Write your reflection, insights, or what God is teaching you today..."></textarea>
-                <button onclick="saveBibleEntry()" class="btn-primary mt-4">Save Reflection</button>
-            </div>
-
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-clock-rotate-left text-slate-500"></i>
-                    Recent Reflections
-                </div>
-                <div id="bible-entries"></div>
-            </div>
-        </main>
-        
-        <button onclick="scrollToTop()" class="fab-button">
+    <!-- Continue with other pages --        <button onclick="scrollToTop()" class="fab-button">
             <i class="fa-solid fa-arrow-up text-xl"></i>
         </button>
     </div>
@@ -9831,6 +10037,231 @@ Keep recording your dreams to discover deeper patterns over time!
             document.getElementById('book-search-input').value = title;
             switchLearningTab('library');
             setTimeout(() => searchBooks(), 300);
+        }
+
+        // Bible Tab Switching
+        function switchBibleTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.bible-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.bible-tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.style.borderBottomColor = 'transparent';
+                tab.style.color = '#64748b';
+            });
+            
+            // Show selected content
+            const selectedContent = document.getElementById(`bible-content-${tabName}`);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+            
+            // Activate selected tab
+            const selectedTab = document.getElementById(`bible-tab-${tabName}`);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+
+            // Load content for specific tabs
+            if (tabName === 'read') {
+                initializeBibleReader();
+            }
+        }
+
+        // Bible Reading Functionality
+        const bibleBooks = {
+            old: [
+                { name: 'Genesis', chapters: 50, abbr: 'Gen' },
+                { name: 'Exodus', chapters: 40, abbr: 'Exod' },
+                { name: 'Leviticus', chapters: 27, abbr: 'Lev' },
+                { name: 'Numbers', chapters: 36, abbr: 'Num' },
+                { name: 'Deuteronomy', chapters: 34, abbr: 'Deut' },
+                { name: 'Joshua', chapters: 24, abbr: 'Josh' },
+                { name: 'Judges', chapters: 21, abbr: 'Judg' },
+                { name: 'Ruth', chapters: 4, abbr: 'Ruth' },
+                { name: '1 Samuel', chapters: 31, abbr: '1Sam' },
+                { name: '2 Samuel', chapters: 24, abbr: '2Sam' },
+                { name: '1 Kings', chapters: 22, abbr: '1Kgs' },
+                { name: '2 Kings', chapters: 25, abbr: '2Kgs' },
+                { name: 'Psalms', chapters: 150, abbr: 'Ps' },
+                { name: 'Proverbs', chapters: 31, abbr: 'Prov' }
+            ],
+            new: [
+                { name: 'Matthew', chapters: 28, abbr: 'Matt' },
+                { name: 'Mark', chapters: 16, abbr: 'Mark' },
+                { name: 'Luke', chapters: 24, abbr: 'Luke' },
+                { name: 'John', chapters: 21, abbr: 'John' },
+                { name: 'Acts', chapters: 28, abbr: 'Acts' },
+                { name: 'Romans', chapters: 16, abbr: 'Rom' },
+                { name: '1 Corinthians', chapters: 16, abbr: '1Cor' },
+                { name: '2 Corinthians', chapters: 13, abbr: '2Cor' },
+                { name: 'Galatians', chapters: 6, abbr: 'Gal' },
+                { name: 'Ephesians', chapters: 6, abbr: 'Eph' },
+                { name: 'Philippians', chapters: 4, abbr: 'Phil' },
+                { name: 'James', chapters: 5, abbr: 'Jas' },
+                { name: '1 Peter', chapters: 5, abbr: '1Pet' },
+                { name: 'Revelation', chapters: 22, abbr: 'Rev' }
+            ]
+        };
+
+        let currentTestament = 'old';
+        let currentBook = null;
+        let currentChapter = 1;
+        let fontSize = 16;
+
+        function initializeBibleReader() {
+            loadBibleBooks('old');
+        }
+
+        function switchTestament(testament) {
+            currentTestament = testament;
+            loadBibleBooks(testament);
+            
+            // Update button styles
+            if (testament === 'old') {
+                document.getElementById('testament-old').className = 'flex-1 p-3 bg-slate-800 text-white rounded-xl font-bold text-sm active:scale-95 transition';
+                document.getElementById('testament-new').className = 'flex-1 p-3 bg-slate-200 text-slate-600 rounded-xl font-bold text-sm active:scale-95 transition';
+            } else {
+                document.getElementById('testament-old').className = 'flex-1 p-3 bg-slate-200 text-slate-600 rounded-xl font-bold text-sm active:scale-95 transition';
+                document.getElementById('testament-new').className = 'flex-1 p-3 bg-slate-800 text-white rounded-xl font-bold text-sm active:scale-95 transition';
+            }
+        }
+
+        function loadBibleBooks(testament) {
+            const grid = document.getElementById('bible-books-grid');
+            const books = bibleBooks[testament];
+            
+            grid.innerHTML = books.map(book => `
+                <button onclick="selectBook('${book.name}', ${book.chapters}, '${testament}')" class="bible-book-button text-left">
+                    <p class="font-bold text-sm">${book.name}</p>
+                    <p class="text-xs text-slate-500">${book.chapters} chapters</p>
+                </button>
+            `).join('');
+            
+            // Hide chapters and reading sections
+            document.getElementById('chapters-section').style.display = 'none';
+            document.getElementById('bible-reading-section').style.display = 'none';
+        }
+
+        function selectBook(bookName, chapters, testament) {
+            currentBook = { name: bookName, chapters: chapters, testament: testament };
+            
+            // Update selected book name
+            document.getElementById('selected-book-name').textContent = `${bookName} - Select Chapter`;
+            
+            // Generate chapter buttons
+            const chaptersGrid = document.getElementById('bible-chapters-grid');
+            let chaptersHTML = '';
+            for (let i = 1; i <= chapters; i++) {
+                chaptersHTML += `<button onclick="loadChapter(${i})" class="bible-chapter-button">${i}</button>`;
+            }
+            chaptersGrid.innerHTML = chaptersHTML;
+            
+            // Show chapters section
+            document.getElementById('chapters-section').style.display = 'block';
+            
+            // Scroll to chapters
+            document.getElementById('chapters-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function loadChapter(chapter) {
+            currentChapter = chapter;
+            
+            // Update reading view
+            document.getElementById('reading-book-name').textContent = `${currentBook.name} ${chapter}`;
+            
+            // Load sample verses (in real app, you'd fetch from Bible API)
+            loadSampleVerses(currentBook.name, chapter);
+            
+            // Hide chapters section and show reading
+            document.getElementById('chapters-section').style.display = 'none';
+            document.getElementById('bible-reading-section').style.display = 'block';
+            
+            // Scroll to reading section
+            document.getElementById('bible-reading-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function loadSampleVerses(book, chapter) {
+            const container = document.getElementById('bible-verses-container');
+            
+            // Sample verses - in production, fetch from Bible API
+            const sampleText = `This is a placeholder for ${book} chapter ${chapter}. 
+            
+In a production app, you would integrate with a Bible API like:
+• api.bible
+• bible.com API
+• ESV API
+• YouVersion API
+
+For now, you can read your Bible alongside this tracker and use the reflection section to journal your insights.`;
+
+            container.innerHTML = `
+                <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl mb-4">
+                    <div class="flex items-start gap-2">
+                        <i class="fa-solid fa-info-circle text-amber-600 mt-1"></i>
+                        <div>
+                            <p class="font-bold text-amber-900 text-sm mb-1">Bible API Integration</p>
+                            <p class="text-xs text-amber-800">${sampleText}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="bible-verse">
+                        <span class="verse-number">1</span>
+                        <span class="verse-text-bible">In the beginning God created the heaven and the earth.</span>
+                    </div>
+                    <div class="bible-verse">
+                        <span class="verse-number">2</span>
+                        <span class="verse-text-bible">And the earth was without form, and void; and darkness was upon the face of the deep.</span>
+                    </div>
+                    <div class="bible-verse">
+                        <span class="verse-number">3</span>
+                        <span class="verse-text-bible">And God said, Let there be light: and there was light.</span>
+                    </div>
+                </div>
+            `;
+            
+            applyFontSize();
+        }
+
+        function closeBibleReading() {
+            document.getElementById('bible-reading-section').style.display = 'none';
+            document.getElementById('chapters-section').style.display = 'block';
+            document.getElementById('chapters-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleBibleSettings() {
+            const settings = document.getElementById('bible-settings');
+            settings.style.display = settings.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function adjustFontSize(change) {
+            fontSize += change;
+            if (fontSize < 12) fontSize = 12;
+            if (fontSize > 24) fontSize = 24;
+            applyFontSize();
+        }
+
+        function applyFontSize() {
+            const verses = document.querySelectorAll('.verse-text-bible');
+            verses.forEach(verse => {
+                verse.style.fontSize = fontSize + 'px';
+            });
+        }
+
+        function previousChapter() {
+            if (currentChapter > 1) {
+                loadChapter(currentChapter - 1);
+            }
+        }
+
+        function nextChapter() {
+            if (currentChapter < currentBook.chapters) {
+                loadChapter(currentChapter + 1);
+            }
         }
 
     </script>
