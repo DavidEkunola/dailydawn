@@ -545,6 +545,318 @@
         .book-search-result:hover {
             background: #f8fafc;
         }
+        
+        /* Professional Markdown-Style Ebook Content Styling */
+        .ebook-content {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1e293b;
+            font-size: 16px;
+            max-width: 100%;
+        }
+        
+        /* Headings with Markdown-style spacing and hierarchy */
+        .ebook-content h1 {
+            font-size: 2.25rem;
+            font-weight: 900;
+            margin-top: 2rem;
+            margin-bottom: 1.25rem;
+            color: #0f172a;
+            line-height: 1.2;
+            letter-spacing: -0.025em;
+            border-bottom: 3px solid #f59e0b;
+            padding-bottom: 0.5rem;
+        }
+        
+        .ebook-content h2 {
+            font-size: 1.875rem;
+            font-weight: 800;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: #1e293b;
+            line-height: 1.3;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.375rem;
+        }
+        
+        .ebook-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 0.875rem;
+            color: #334155;
+            line-height: 1.4;
+        }
+        
+        .ebook-content h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 1.75rem;
+            margin-bottom: 0.75rem;
+            color: #475569;
+            line-height: 1.45;
+        }
+        
+        .ebook-content h5 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.625rem;
+            color: #64748b;
+            line-height: 1.5;
+        }
+        
+        .ebook-content h6 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #64748b;
+            line-height: 1.5;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Paragraphs with proper spacing */
+        .ebook-content p {
+            margin-bottom: 1.25rem;
+            line-height: 1.75;
+            color: #334155;
+        }
+        
+        /* First paragraph after heading should have more space */
+        .ebook-content h1 + p,
+        .ebook-content h2 + p,
+        .ebook-content h3 + p {
+            margin-top: 0.75rem;
+        }
+        
+        /* Strong and emphasis */
+        .ebook-content strong,
+        .ebook-content b {
+            font-weight: 700;
+            color: #1e293b;
+        }
+        
+        .ebook-content em,
+        .ebook-content i {
+            font-style: italic;
+            color: #475569;
+        }
+        
+        /* Lists with proper indentation and spacing */
+        .ebook-content ul,
+        .ebook-content ol {
+            margin-bottom: 1.5rem;
+            margin-left: 0;
+            padding-left: 2rem;
+        }
+        
+        .ebook-content ul {
+            list-style-type: disc;
+        }
+        
+        .ebook-content ol {
+            list-style-type: decimal;
+        }
+        
+        .ebook-content ul li,
+        .ebook-content ol li {
+            margin-bottom: 0.625rem;
+            line-height: 1.7;
+            color: #334155;
+            padding-left: 0.5rem;
+        }
+        
+        .ebook-content ul li::marker {
+            color: #f59e0b;
+            font-size: 0.875em;
+        }
+        
+        .ebook-content ol li::marker {
+            color: #f59e0b;
+            font-weight: 700;
+        }
+        
+        /* Nested lists */
+        .ebook-content ul ul,
+        .ebook-content ol ol,
+        .ebook-content ul ol,
+        .ebook-content ol ul {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Blockquotes - Markdown style */
+        .ebook-content blockquote {
+            border-left: 4px solid #f59e0b;
+            padding: 1rem 1.5rem;
+            margin: 1.75rem 0;
+            background: linear-gradient(to right, #fef3c7, #fffbeb);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: #475569;
+        }
+        
+        .ebook-content blockquote p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .ebook-content blockquote p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Code - inline and blocks */
+        .ebook-content code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 0.875em;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .ebook-content pre {
+            background: #1e293b;
+            color: #f1f5f9;
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid #334155;
+        }
+        
+        .ebook-content pre code {
+            background: transparent;
+            padding: 0;
+            border: none;
+            color: inherit;
+        }
+        
+        /* Links */
+        .ebook-content a {
+            color: #2563eb;
+            text-decoration: underline;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .ebook-content a:hover {
+            color: #1d4ed8;
+        }
+        
+        /* Horizontal rules */
+        .ebook-content hr {
+            border: none;
+            border-top: 2px solid #e2e8f0;
+            margin: 2.5rem 0;
+        }
+        
+        /* Tables - if any */
+        .ebook-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9375rem;
+        }
+        
+        .ebook-content table th,
+        .ebook-content table td {
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        
+        .ebook-content table th {
+            background: #f8fafc;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .ebook-content table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+        
+        /* Images */
+        .ebook-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        /* Special formatting for first letter of first paragraph */
+        .ebook-content > p:first-of-type:first-letter {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1;
+            float: left;
+            margin-right: 0.5rem;
+            margin-top: 0.1rem;
+            color: #f59e0b;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .ebook-content {
+                font-size: 15px;
+            }
+            
+            .ebook-content h1 {
+                font-size: 1.875rem;
+                margin-top: 1.5rem;
+            }
+            
+            .ebook-content h2 {
+                font-size: 1.5rem;
+                margin-top: 2rem;
+            }
+            
+            .ebook-content h3 {
+                font-size: 1.25rem;
+                margin-top: 1.75rem;
+            }
+            
+            .ebook-content h4 {
+                font-size: 1.125rem;
+            }
+            
+            .ebook-content h5,
+            .ebook-content h6 {
+                font-size: 1rem;
+            }
+            
+            .ebook-content > p:first-of-type:first-letter {
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* Print styles for when users want to print */
+        @media print {
+            .ebook-content {
+                font-size: 12pt;
+                line-height: 1.6;
+                color: #000;
+            }
+            
+            .ebook-content h1,
+            .ebook-content h2,
+            .ebook-content h3,
+            .ebook-content h4,
+            .ebook-content h5,
+            .ebook-content h6 {
+                page-break-after: avoid;
+                color: #000;
+            }
+            
+            .ebook-content p,
+            .ebook-content ul,
+            .ebook-content ol {
+                orphans: 3;
+                widows: 3;
+            }
+        }
     </style>
 </head>
 <body class="max-w-md mx-auto min-h-screen pb-28" oncontextmenu="return false;" onselectstart="return false;" oncopy="return false;">
@@ -965,62 +1277,6 @@
         </div>
     </div>
 
-    <!-- Add/Edit Routine Task Modal -->
-    <div id="routine-task-modal" class="modal">
-        <div class="modal-content">
-            <button onclick="closeRoutineTaskModal()" class="float-right text-slate-400 hover:text-slate-600">
-                <i class="fa-solid fa-times text-2xl"></i>
-            </button>
-            
-            <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-plus text-white text-2xl"></i>
-                </div>
-                <h2 class="text-xl font-black text-slate-800 mb-2" id="routine-modal-title">Add Routine Task</h2>
-                <p class="text-sm text-slate-600">Customize your daily routine</p>
-            </div>
-
-            <div class="mb-4">
-                <label class="text-sm font-bold text-slate-700 mb-2 block">Task Name</label>
-                <input type="text" id="routine-task-name" class="input-field" placeholder="e.g., Morning Workout">
-            </div>
-
-            <div class="mb-4">
-                <label class="text-sm font-bold text-slate-700 mb-2 block">Icon (emoji or text)</label>
-                <input type="text" id="routine-task-icon" class="input-field" placeholder="e.g., 💪 or W" maxlength="2">
-            </div>
-
-            <button onclick="saveRoutineTask()" class="btn-primary" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">
-                <i class="fa-solid fa-check mr-2"></i><span id="routine-save-btn-text">Add Task</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- Routine Manager Modal -->
-    <div id="routine-manager-modal" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <button onclick="closeRoutineManager()" class="float-right text-slate-400 hover:text-slate-600">
-                <i class="fa-solid fa-times text-2xl"></i>
-            </button>
-            
-            <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-gear text-white text-2xl"></i>
-                </div>
-                <h2 class="text-xl font-black text-slate-800 mb-2">Manage Routine</h2>
-                <p class="text-sm text-slate-600">Edit, reorder, or delete tasks</p>
-            </div>
-
-            <div class="space-y-2 mb-4" id="routine-manager-list">
-                <!-- Routine items for management will be listed here -->
-            </div>
-
-            <button onclick="closeRoutineManager()" class="btn-primary">
-                Done
-            </button>
-        </div>
-    </div>
-
     <!-- Dashboard View -->
     <div id="dashboard-view" class="page-view active">
         <header class="glass-header text-white p-8 shadow-2xl">
@@ -1117,6 +1373,14 @@
                         <div class="icon-box bg-purple-50 text-purple-600"><i class="fa-solid fa-microphone"></i></div>
                         <span class="text-[10px] font-bold text-slate-500">VOICE</span>
                     </button>
+                    <button onclick="navigateToPage('dailydawnapp')" class="service-tile">
+                        <div class="icon-box bg-sky-50 text-sky-600"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                        <span class="text-[10px] font-bold text-slate-500">ABOUT</span>
+                    </button>
+                    <button onclick="navigateToPage('export-data')" class="service-tile">
+                        <div class="icon-box bg-teal-50 text-teal-600"><i class="fa-solid fa-download"></i></div>
+                        <span class="text-[10px] font-bold text-slate-500">EXPORT</span>
+                    </button>
                     <button onclick="navigateToPage('accountability')" class="service-tile">
                         <div class="icon-box bg-green-50 text-green-600"><i class="fa-solid fa-user-check"></i></div>
                         <span class="text-[10px] font-bold text-slate-500">PARTNER</span>
@@ -1137,14 +1401,6 @@
                         <div class="icon-box bg-violet-50 text-violet-600"><i class="fa-solid fa-chart-line"></i></div>
                         <span class="text-[10px] font-bold text-slate-500">TRACKER</span>
                     </button>
-                    <button onclick="navigateToPage('dailydawnapp')" class="service-tile">
-                        <div class="icon-box bg-sky-50 text-sky-600"><i class="fa-solid fa-mobile-screen-button"></i></div>
-                        <span class="text-[10px] font-bold text-slate-500">ABOUT</span>
-                    </button>
-                    <button onclick="navigateToPage('export-data')" class="service-tile">
-                        <div class="icon-box bg-teal-50 text-teal-600"><i class="fa-solid fa-download"></i></div>
-                        <span class="text-[10px] font-bold text-slate-500">EXPORT</span>
-                    </button>
                     <button onclick="resetData()" class="service-tile">
                         <div class="icon-box bg-slate-50 text-slate-300"><i class="fa-solid fa-rotate-right"></i></div>
                         <span class="text-[10px] font-bold text-slate-500">RESET</span>
@@ -1152,35 +1408,22 @@
                 </div>
             </div>
 
-            <!-- Daily Routine Checklist - Redesigned -->
+            <!-- Daily Routine Checklist -->
             <div class="mb-6">
                 <div class="content-card">
-                    <div class="flex items-center gap-2 mb-4 justify-between">
+                    <div class="flex items-center gap-2 mb-3 justify-between">
                         <div class="flex items-center gap-2">
                             <i class="fa-solid fa-list-check text-indigo-600 text-sm"></i>
                             <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Daily Routine</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold text-slate-600" id="routine-progress">0/0</span>
-                            <button onclick="showRoutineManager()" class="text-indigo-600 hover:text-indigo-800">
-                                <i class="fa-solid fa-gear text-sm"></i>
-                            </button>
-                        </div>
+                        <span class="text-xs font-bold text-slate-600" id="routine-progress">0/0</span>
                     </div>
-                    
-                    <!-- Compact Grid Display -->
-                    <div class="grid grid-cols-2 gap-2 mb-3" id="routine-checklist">
+                    <div class="space-y-2" id="routine-checklist">
                         <!-- Routine items will be dynamically added here -->
                     </div>
-                    
-                    <div class="flex gap-2 mt-3">
-                        <button onclick="showAddRoutineModal()" class="flex-1 py-2 bg-indigo-50 text-indigo-600 rounded-lg font-bold text-xs hover:bg-indigo-100 transition">
-                            <i class="fa-solid fa-plus mr-1"></i> Add Task
-                        </button>
-                        <button onclick="resetDailyRoutine()" class="py-2 px-3 bg-amber-50 text-amber-600 rounded-lg font-bold text-xs hover:bg-amber-100 transition">
-                            <i class="fa-solid fa-rotate-right"></i>
-                        </button>
-                    </div>
+                    <button onclick="resetDailyRoutine()" class="text-xs text-amber-600 font-bold mt-3 w-full text-center">
+                        <i class="fa-solid fa-rotate-right"></i> Reset Today's Routine
+                    </button>
                 </div>
             </div>
 
@@ -8386,38 +8629,30 @@ setInterval(() => {
         // Daily Routine Checklist Functions
         function getDefaultRoutines() {
             return [
-                { id: 1, text: 'Morning Prayer', icon: '🙏', checked: false },
-                { id: 2, text: 'Read Bible', icon: '📖', checked: false },
-                { id: 3, text: 'Exercise/Gym', icon: '💪', checked: false },
-                { id: 4, text: 'Healthy Breakfast', icon: '🥗', checked: false },
-                { id: 5, text: 'Journal Entry', icon: '📝', checked: false },
-                { id: 6, text: 'Gratitude Practice', icon: '❤️', checked: false }
+                { id: 1, text: 'Morning Prayer', checked: false },
+                { id: 2, text: 'Read Bible', checked: false },
+                { id: 3, text: 'Exercise/Gym', checked: false },
+                { id: 4, text: 'Healthy Breakfast', checked: false },
+                { id: 5, text: 'Journal Entry', checked: false },
+                { id: 6, text: 'Gratitude Practice', checked: false },
+                { id: 7, text: 'Learn Something New', checked: false },
+                { id: 8, text: 'Evening Reflection', checked: false }
             ];
         }
 
         function loadDailyRoutine() {
             const today = new Date().toDateString();
             const savedDate = localStorage.getItem('routineDate');
-            
-            // Get custom routines template (user's configured routines)
-            let customRoutines = JSON.parse(localStorage.getItem('customRoutines') || 'null');
-            if (!customRoutines) {
-                customRoutines = getDefaultRoutines();
-                localStorage.setItem('customRoutines', JSON.stringify(customRoutines));
-            }
-            
-            // Get today's progress
-            let todayRoutines = JSON.parse(localStorage.getItem('dailyRoutines') || 'null');
+            let routines = JSON.parse(localStorage.getItem('dailyRoutines') || 'null');
 
             // Reset if it's a new day
-            if (savedDate !== today || !todayRoutines) {
-                todayRoutines = JSON.parse(JSON.stringify(customRoutines)); // Deep copy
-                todayRoutines.forEach(r => r.checked = false);
-                localStorage.setItem('dailyRoutines', JSON.stringify(todayRoutines));
+            if (savedDate !== today || !routines) {
+                routines = getDefaultRoutines();
+                localStorage.setItem('dailyRoutines', JSON.stringify(routines));
                 localStorage.setItem('routineDate', today);
             }
 
-            renderDailyRoutine(todayRoutines);
+            renderDailyRoutine(routines);
         }
 
         function renderDailyRoutine(routines) {
@@ -8430,14 +8665,12 @@ setInterval(() => {
             const total = routines.length;
             progressDisplay.textContent = `${completed}/${total}`;
 
-            // Compact grid layout
             container.innerHTML = routines.map(routine => `
-                <div class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-lg border border-slate-200 hover:bg-slate-100 transition cursor-pointer" onclick="toggleRoutine(${routine.id})">
-                    <div class="habit-checkbox ${routine.checked ? 'checked' : ''}">
+                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="habit-checkbox ${routine.checked ? 'checked' : ''}" onclick="toggleRoutine(${routine.id})">
                         ${routine.checked ? '<i class="fa-solid fa-check text-white text-xs"></i>' : ''}
                     </div>
-                    <span class="text-lg">${routine.icon || '✓'}</span>
-                    <span class="text-xs font-medium text-slate-700 ${routine.checked ? 'line-through text-slate-400' : ''} flex-1 truncate">${routine.text}</span>
+                    <span class="text-sm font-medium text-slate-700 ${routine.checked ? 'line-through text-slate-400' : ''}">${routine.text}</span>
                 </div>
             `).join('');
         }
@@ -8460,138 +8693,11 @@ setInterval(() => {
 
         function resetDailyRoutine() {
             if (confirm('Are you sure you want to reset today\'s routine checklist?')) {
-                let customRoutines = JSON.parse(localStorage.getItem('customRoutines') || '[]');
-                let todayRoutines = JSON.parse(JSON.stringify(customRoutines));
-                todayRoutines.forEach(r => r.checked = false);
-                localStorage.setItem('dailyRoutines', JSON.stringify(todayRoutines));
+                const routines = getDefaultRoutines();
+                localStorage.setItem('dailyRoutines', JSON.stringify(routines));
                 localStorage.setItem('routineDate', new Date().toDateString());
-                renderDailyRoutine(todayRoutines);
+                renderDailyRoutine(routines);
             }
-        }
-
-        // Routine Management Functions
-        let editingRoutineId = null;
-
-        function showAddRoutineModal() {
-            editingRoutineId = null;
-            document.getElementById('routine-modal-title').textContent = 'Add Routine Task';
-            document.getElementById('routine-save-btn-text').textContent = 'Add Task';
-            document.getElementById('routine-task-name').value = '';
-            document.getElementById('routine-task-icon').value = '';
-            document.getElementById('routine-task-modal').classList.add('active');
-        }
-
-        function closeRoutineTaskModal() {
-            document.getElementById('routine-task-modal').classList.remove('active');
-            editingRoutineId = null;
-        }
-
-        function saveRoutineTask() {
-            const name = document.getElementById('routine-task-name').value.trim();
-            const icon = document.getElementById('routine-task-icon').value.trim();
-            
-            if (!name) {
-                alert('Please enter a task name');
-                return;
-            }
-
-            let customRoutines = JSON.parse(localStorage.getItem('customRoutines') || '[]');
-            
-            if (editingRoutineId !== null) {
-                // Edit existing
-                const routine = customRoutines.find(r => r.id === editingRoutineId);
-                if (routine) {
-                    routine.text = name;
-                    routine.icon = icon || '✓';
-                }
-            } else {
-                // Add new
-                const newId = customRoutines.length > 0 ? Math.max(...customRoutines.map(r => r.id)) + 1 : 1;
-                customRoutines.push({
-                    id: newId,
-                    text: name,
-                    icon: icon || '✓',
-                    checked: false
-                });
-            }
-
-            localStorage.setItem('customRoutines', JSON.stringify(customRoutines));
-            
-            // Update today's routines
-            let todayRoutines = JSON.parse(localStorage.getItem('dailyRoutines') || '[]');
-            if (editingRoutineId !== null) {
-                const todayRoutine = todayRoutines.find(r => r.id === editingRoutineId);
-                if (todayRoutine) {
-                    todayRoutine.text = name;
-                    todayRoutine.icon = icon || '✓';
-                }
-            } else {
-                todayRoutines.push({
-                    id: customRoutines[customRoutines.length - 1].id,
-                    text: name,
-                    icon: icon || '✓',
-                    checked: false
-                });
-            }
-            localStorage.setItem('dailyRoutines', JSON.stringify(todayRoutines));
-            
-            renderDailyRoutine(todayRoutines);
-            closeRoutineTaskModal();
-        }
-
-        function showRoutineManager() {
-            const customRoutines = JSON.parse(localStorage.getItem('customRoutines') || '[]');
-            const managerList = document.getElementById('routine-manager-list');
-            
-            managerList.innerHTML = customRoutines.map(routine => `
-                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                    <span class="text-xl">${routine.icon || '✓'}</span>
-                    <span class="text-sm font-medium text-slate-700 flex-1">${routine.text}</span>
-                    <button onclick="editRoutineTask(${routine.id})" class="px-3 py-1.5 bg-blue-100 text-blue-600 rounded-lg text-xs font-bold hover:bg-blue-200">
-                        <i class="fa-solid fa-pen"></i>
-                    </button>
-                    <button onclick="deleteRoutineTask(${routine.id})" class="px-3 py-1.5 bg-red-100 text-red-600 rounded-lg text-xs font-bold hover:bg-red-200">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            `).join('');
-            
-            document.getElementById('routine-manager-modal').classList.add('active');
-        }
-
-        function closeRoutineManager() {
-            document.getElementById('routine-manager-modal').classList.remove('active');
-        }
-
-        function editRoutineTask(routineId) {
-            const customRoutines = JSON.parse(localStorage.getItem('customRoutines') || '[]');
-            const routine = customRoutines.find(r => r.id === routineId);
-            
-            if (routine) {
-                editingRoutineId = routineId;
-                document.getElementById('routine-modal-title').textContent = 'Edit Routine Task';
-                document.getElementById('routine-save-btn-text').textContent = 'Save Changes';
-                document.getElementById('routine-task-name').value = routine.text;
-                document.getElementById('routine-task-icon').value = routine.icon;
-                closeRoutineManager();
-                document.getElementById('routine-task-modal').classList.add('active');
-            }
-        }
-
-        function deleteRoutineTask(routineId) {
-            if (!confirm('Are you sure you want to delete this task?')) return;
-            
-            let customRoutines = JSON.parse(localStorage.getItem('customRoutines') || '[]');
-            customRoutines = customRoutines.filter(r => r.id !== routineId);
-            localStorage.setItem('customRoutines', JSON.stringify(customRoutines));
-            
-            // Also remove from today's routines
-            let todayRoutines = JSON.parse(localStorage.getItem('dailyRoutines') || '[]');
-            todayRoutines = todayRoutines.filter(r => r.id !== routineId);
-            localStorage.setItem('dailyRoutines', JSON.stringify(todayRoutines));
-            
-            renderDailyRoutine(todayRoutines);
-            showRoutineManager(); // Refresh the manager view
         }
 
         // AI Coach Functions
@@ -13337,7 +13443,7 @@ In today's economy, a side hustle isn't just nice to have - it's essential. This
                     </div>
                 </div>
                 <div id="ebook-reader-${ebookId}" class="content-card" style="display: none;">
-                    <div class="prose max-w-none">
+                    <div class="ebook-content prose max-w-none">
                         ${ebookData.content}
                     </div>
                 </div>
