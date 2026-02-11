@@ -10,12 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500;700;900&family=Crimson+Text:ital@0;1&display=swap" rel="stylesheet">
-
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
-<style>
+    <style>
         :root { 
             --accent: #f59e0b; 
             --bg: #0f172a; 
@@ -289,7 +284,7 @@
                     <div>
                         <h3 class="font-black text-slate-800 text-lg" id="user-name-display">User Name</h3>
                         <p class="text-sm text-slate-600" id="user-username-display">@username</p>
-                        <p class="text-xs text-slate-500" id="user-email-display">email@example.com</p>
+                        <p class="text-xs text-slate-500" id="user-email-display"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="81e4ece0e8edc1e4f9e0ecf1ede4afe2eeec">[email&#160;protected]</a></p>
                     </div>
                 </div>
                 <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
@@ -596,6 +591,12 @@
                             Priority Support
                         </p>
                     </div>
+                    <div class="premium-feature">
+                        <p class="font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-user-check text-amber-600"></i>
+                            Accountability
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -684,9 +685,60 @@
                         <div class="icon-box bg-slate-100 text-slate-600"><i class="fa-solid fa-pen-nib"></i></div>
                         <span class="text-[10px] font-bold text-slate-500">JOURNAL</span>
                     </button>
+                    <button onclick="navigateToPage('ai-coach')" class="service-tile">
+                        <div class="icon-box bg-amber-50 text-amber-600"><i class="fa-solid fa-robot"></i></div>
+                        <span class="text-[10px] font-bold text-slate-500">AI COACH</span>
+                    </button>
+                    <button onclick="navigateToPage('alarms')" class="service-tile">
+                        <div class="icon-box bg-orange-50 text-orange-600"><i class="fa-solid fa-bell"></i></div>
+                        <span class="text-[10px] font-bold text-slate-500">ALARMS</span>
+                    </button>
+                    <button onclick="navigateToPage('emotions')" class="service-tile">
+                        <div class="icon-box bg-pink-50 text-pink-600"><i class="fa-solid fa-heart-pulse"></i></div>
+                        <span class="text-[10px] font-bold text-slate-500">EMOTIONS</span>
+                    </button>
+                    <button onclick="navigateToPage('analytics')" class="service-tile">
+                        <div class="icon-box bg-blue-50 text-blue-600"><i class="fa-solid fa-chart-line"></i></div>
+                        <span class="text-[10px] font-bold text-slate-500">ANALYTICS</span>
+                    </button>
+                    <button onclick="navigateToPage('voice-journal')" class="service-tile">
+                        <div class="icon-box bg-purple-50 text-purple-600"><i class="fa-solid fa-microphone"></i></div>
+                        <span class="text-[10px] font-bold text-slate-500">VOICE</span>
+                    </button>
+                    <button onclick="navigateToPage('export-data')" class="service-tile">
+                        <div class="icon-box bg-teal-50 text-teal-600"><i class="fa-solid fa-download"></i></div>
+                        <span class="text-[10px] font-bold text-slate-500">EXPORT</span>
+                    </button>
+                    <button onclick="navigateToPage('accountability')" class="service-tile">
+                        <div class="icon-box bg-green-50 text-green-600"><i class="fa-solid fa-user-check"></i></div>
+                        <span class="text-[10px] font-bold text-slate-500">PARTNER</span>
+                    </button>
+                    <button onclick="navigateToPage('earn')" class="service-tile">
+                        <div class="icon-box bg-emerald-50 text-emerald-600"><i class="fa-solid fa-naira-sign"></i></div>
+                        <span class="text-[10px] font-bold text-slate-500">EARN</span>
+                    </button>
                     <button onclick="resetData()" class="service-tile">
                         <div class="icon-box bg-slate-50 text-slate-300"><i class="fa-solid fa-rotate-right"></i></div>
                         <span class="text-[10px] font-bold text-slate-500">RESET</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Daily Routine Checklist -->
+            <div class="mb-6">
+                <div class="content-card">
+                    <div class="flex items-center gap-2 mb-3 justify-between">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-indigo-600 text-sm"></i>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Daily Routine</span>
+                        </div>
+                        <span class="text-xs font-bold text-slate-600" id="routine-progress">0/0</span>
+                    </div>
+                    <div class="space-y-2" id="routine-checklist">
+                        <!-- Routine items will be dynamically added here -->
+                    </div>
+                    <button onclick="resetDailyRoutine()" class="text-xs text-amber-600 font-bold mt-3 w-full text-center">
+                        <i class="fa-solid fa-rotate-right"></i> Reset Today's Routine
                     </button>
                 </div>
             </div>
@@ -1605,6 +1657,891 @@
         </button>
     </div>
 
+    <!-- AI Coach Page -->
+    <div id="ai-coach-view" class="page-view">
+        <header class="glass-header text-white p-8 shadow-2xl" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateToPage('dashboard')" class="w-10 h-10 rounded-full bg-amber-800 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-left text-amber-300"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tighter" style="font-family: 'Archivo Black', sans-serif;">AI LIFE COACH</h1>
+                        <p class="text-[10px] text-amber-200 font-bold uppercase tracking-widest">24/7 Support</p>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-amber-600 flex items-center justify-center">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-5 -mt-6">
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-robot text-amber-600"></i>
+                    Chat with Your AI Coach
+                </div>
+                <div id="ai-chat-messages" class="space-y-3 mb-4" style="max-height: 400px; overflow-y: auto;">
+                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+                        <p class="text-sm font-bold text-amber-800 mb-1">AI Coach</p>
+                        <p class="text-sm text-slate-700">Hello! I'm your AI Life Coach. How can I help you today? Ask me about goals, habits, motivation, or anything you'd like guidance on!</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <input id="ai-coach-input" class="input-field flex-1" placeholder="Ask your AI coach anything..." onkeypress="if(event.key==='Enter') sendAICoachMessage()">
+                    <button onclick="sendAICoachMessage()" class="w-12 h-12 rounded-xl bg-amber-600 text-white flex items-center justify-center">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                    Quick Topics
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="quickAIPrompt('How do I stay motivated?')" class="p-3 bg-amber-50 rounded-xl text-xs font-bold text-amber-800 border border-amber-200">💪 Motivation</button>
+                    <button onclick="quickAIPrompt('Help me set better goals')" class="p-3 bg-amber-50 rounded-xl text-xs font-bold text-amber-800 border border-amber-200">🎯 Goal Setting</button>
+                    <button onclick="quickAIPrompt('How to build good habits?')" class="p-3 bg-amber-50 rounded-xl text-xs font-bold text-amber-800 border border-amber-200">🔁 Habits</button>
+                    <button onclick="quickAIPrompt('Tips for stress management')" class="p-3 bg-amber-50 rounded-xl text-xs font-bold text-amber-800 border border-amber-200">😌 Stress Relief</button>
+                </div>
+            </div>
+        </main>
+        
+        <button onclick="scrollToTop()" class="fab-button">
+            <i class="fa-solid fa-arrow-up text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Alarms & Reminders Page -->
+    <div id="alarms-view" class="page-view">
+        <header class="glass-header text-white p-8 shadow-2xl" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateToPage('dashboard')" class="w-10 h-10 rounded-full bg-orange-800 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-left text-orange-300"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tighter" style="font-family: 'Archivo Black', sans-serif;">SMART ALARMS</h1>
+                        <p class="text-[10px] text-orange-200 font-bold uppercase tracking-widest">Stay On Track</p>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-orange-600 flex items-center justify-center">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-5 -mt-6">
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-plus text-orange-600"></i>
+                    Create New Alarm
+                </div>
+                <input id="alarm-title" class="input-field mb-3" placeholder="Alarm title...">
+                <input id="alarm-time" class="input-field mb-3" type="time" placeholder="Time">
+                <select id="alarm-repeat" class="input-field mb-3">
+                    <option value="daily">Daily</option>
+                    <option value="weekdays">Weekdays</option>
+                    <option value="weekends">Weekends</option>
+                    <option value="once">Once</option>
+                </select>
+                <textarea id="alarm-message" class="textarea-field mb-3" style="min-height: 80px;" placeholder="Reminder message..."></textarea>
+                <button onclick="addAlarm()" class="btn-primary">Set Alarm</button>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-clock text-orange-500"></i>
+                    Your Alarms
+                </div>
+                <div id="alarms-list" class="space-y-2">
+                    <p class="text-sm text-slate-400">No alarms set yet</p>
+                </div>
+            </div>
+        </main>
+        
+        <button onclick="scrollToTop()" class="fab-button">
+            <i class="fa-solid fa-arrow-up text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Emotional Analysis Page -->
+    <div id="emotions-view" class="page-view">
+        <header class="glass-header text-white p-8 shadow-2xl" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateToPage('dashboard')" class="w-10 h-10 rounded-full bg-pink-800 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-left text-pink-300"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tighter" style="font-family: 'Archivo Black', sans-serif;">EMOTIONAL ANALYSIS</h1>
+                        <p class="text-[10px] text-pink-200 font-bold uppercase tracking-widest">Understand Your Feelings</p>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-pink-600 flex items-center justify-center">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-5 -mt-6">
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-brain text-pink-600"></i>
+                    Emotion Tracker
+                </div>
+                <div class="space-y-4" id="emotion-insights">
+                    <div class="p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border border-pink-200">
+                        <h3 class="font-bold text-pink-800 mb-2">Your Mood Patterns</h3>
+                        <div class="space-y-2 text-sm text-slate-700">
+                            <p><strong>Most Common:</strong> <span id="common-mood">Loading...</span></p>
+                            <p><strong>Trend:</strong> <span id="mood-trend">Analyzing your patterns...</span></p>
+                            <p><strong>Recommendation:</strong> <span id="mood-advice">Keep tracking your emotions daily</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-chart-pie text-pink-500"></i>
+                    Emotion Distribution
+                </div>
+                <div id="emotion-chart" class="space-y-2">
+                    <!-- Emotion bars will be rendered here -->
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                    Wellness Tips
+                </div>
+                <div class="space-y-2">
+                    <div class="tip-card">
+                        <p class="font-bold text-amber-800 mb-1">Practice Mindfulness</p>
+                        <p class="text-xs text-amber-900">Take 5 minutes daily to meditate and be present.</p>
+                    </div>
+                    <div class="tip-card">
+                        <p class="font-bold text-amber-800 mb-1">Express Gratitude</p>
+                        <p class="text-xs text-amber-900">Write down 3 things you're grateful for each day.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <button onclick="scrollToTop()" class="fab-button">
+            <i class="fa-solid fa-arrow-up text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Analytics Dashboard Page -->
+    <div id="analytics-view" class="page-view">
+        <header class="glass-header text-white p-8 shadow-2xl" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateToPage('dashboard')" class="w-10 h-10 rounded-full bg-blue-800 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-left text-blue-300"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tighter" style="font-family: 'Archivo Black', sans-serif;">ANALYTICS</h1>
+                        <p class="text-[10px] text-blue-200 font-bold uppercase tracking-widest">Your Progress Dashboard</p>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-5 -mt-6">
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-chart-bar text-blue-600"></i>
+                    Key Metrics
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="p-4 bg-blue-50 rounded-xl border border-blue-200">
+                        <p class="text-xs text-blue-600 font-bold mb-1">TOTAL ENTRIES</p>
+                        <p class="text-2xl font-black text-blue-800" id="total-entries">0</p>
+                    </div>
+                    <div class="p-4 bg-green-50 rounded-xl border border-green-200">
+                        <p class="text-xs text-green-600 font-bold mb-1">CURRENT STREAK</p>
+                        <p class="text-2xl font-black text-green-800" id="current-streak">0 days</p>
+                    </div>
+                    <div class="p-4 bg-purple-50 rounded-xl border border-purple-200">
+                        <p class="text-xs text-purple-600 font-bold mb-1">HABITS TRACKED</p>
+                        <p class="text-2xl font-black text-purple-800" id="habits-count">0</p>
+                    </div>
+                    <div class="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                        <p class="text-xs text-amber-600 font-bold mb-1">GOALS ACHIEVED</p>
+                        <p class="text-2xl font-black text-amber-800" id="goals-achieved">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-calendar-days text-blue-500"></i>
+                    Activity This Week
+                </div>
+                <div id="weekly-activity" class="space-y-2">
+                    <!-- Weekly bars will be rendered here -->
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-trophy text-amber-500"></i>
+                    Achievements
+                </div>
+                <div class="grid grid-cols-3 gap-2" id="achievements-grid">
+                    <div class="p-3 bg-slate-50 rounded-xl text-center border border-slate-200">
+                        <p class="text-2xl mb-1">🏆</p>
+                        <p class="text-[10px] font-bold text-slate-600">First Entry</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl text-center border border-slate-200 opacity-40">
+                        <p class="text-2xl mb-1">🔥</p>
+                        <p class="text-[10px] font-bold text-slate-600">7 Day Streak</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl text-center border border-slate-200 opacity-40">
+                        <p class="text-2xl mb-1">⭐</p>
+                        <p class="text-[10px] font-bold text-slate-600">30 Day Streak</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <button onclick="scrollToTop()" class="fab-button">
+            <i class="fa-solid fa-arrow-up text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Voice Journal Page -->
+    <div id="voice-journal-view" class="page-view">
+        <header class="glass-header text-white p-8 shadow-2xl" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateToPage('dashboard')" class="w-10 h-10 rounded-full bg-purple-800 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-left text-purple-300"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tighter" style="font-family: 'Archivo Black', sans-serif;">VOICE JOURNAL</h1>
+                        <p class="text-[10px] text-purple-200 font-bold uppercase tracking-widest">Speak Your Mind</p>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center">
+                    <i class="fa-solid fa-microphone"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-5 -mt-6">
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-microphone text-purple-600"></i>
+                    Record Voice Entry
+                </div>
+                <div class="text-center py-8">
+                    <button id="voice-record-btn" onclick="toggleVoiceRecording()" class="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-white flex items-center justify-center mx-auto shadow-lg">
+                        <i class="fa-solid fa-microphone text-4xl"></i>
+                    </button>
+                    <p class="mt-4 text-sm font-bold text-slate-600" id="voice-status">Tap to start recording</p>
+                    <p class="text-xs text-slate-400 mt-1" id="voice-timer">00:00</p>
+                </div>
+                <div id="voice-controls" class="flex gap-2 mt-4" style="display: none;">
+                    <button onclick="saveVoiceEntry()" class="btn-primary flex-1">Save Recording</button>
+                    <button onclick="cancelVoiceRecording()" class="btn-primary flex-1" style="background: #dc2626;">Cancel</button>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-list text-purple-500"></i>
+                    Voice Recordings
+                </div>
+                <div id="voice-recordings" class="space-y-2">
+                    <p class="text-sm text-slate-400">No recordings yet</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                    Voice Journaling Tips
+                </div>
+                <div class="space-y-2 text-sm text-slate-600">
+                    <p>• Find a quiet space for best audio quality</p>
+                    <p>• Speak naturally and authentically</p>
+                    <p>• Record your thoughts, feelings, and reflections</p>
+                    <p>• Listen back to track your progress</p>
+                </div>
+            </div>
+        </main>
+        
+        <button onclick="scrollToTop()" class="fab-button">
+            <i class="fa-solid fa-arrow-up text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Export Data Page -->
+    <div id="export-data-view" class="page-view">
+        <header class="glass-header text-white p-8 shadow-2xl" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateToPage('dashboard')" class="w-10 h-10 rounded-full bg-teal-800 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-left text-teal-300"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tighter" style="font-family: 'Archivo Black', sans-serif;">EXPORT DATA</h1>
+                        <p class="text-[10px] text-teal-200 font-bold uppercase tracking-widest">Download Your Journey</p>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center">
+                    <i class="fa-solid fa-download"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-5 -mt-6">
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-file-export text-teal-600"></i>
+                    Export Options
+                </div>
+                <div class="space-y-3">
+                    <button onclick="exportPDF()" class="w-full p-4 bg-red-50 text-red-700 rounded-xl font-bold text-sm flex items-center justify-between border border-red-200">
+                        <span><i class="fa-solid fa-file-pdf mr-2"></i>Export as PDF</span>
+                        <i class="fa-solid fa-download"></i>
+                    </button>
+                    <button onclick="exportCSV()" class="w-full p-4 bg-green-50 text-green-700 rounded-xl font-bold text-sm flex items-center justify-between border border-green-200">
+                        <span><i class="fa-solid fa-file-csv mr-2"></i>Export as CSV</span>
+                        <i class="fa-solid fa-download"></i>
+                    </button>
+                    <button onclick="exportJSON()" class="w-full p-4 bg-blue-50 text-blue-700 rounded-xl font-bold text-sm flex items-center justify-between border border-blue-200">
+                        <span><i class="fa-solid fa-file-code mr-2"></i>Export as JSON</span>
+                        <i class="fa-solid fa-download"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-database text-teal-500"></i>
+                    Data Summary
+                </div>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between p-2 bg-slate-50 rounded">
+                        <span class="text-slate-600">Mood Check-ins:</span>
+                        <span class="font-bold text-slate-800" id="export-moods">0</span>
+                    </div>
+                    <div class="flex justify-between p-2 bg-slate-50 rounded">
+                        <span class="text-slate-600">Gratitude Entries:</span>
+                        <span class="font-bold text-slate-800" id="export-gratitude">0</span>
+                    </div>
+                    <div class="flex justify-between p-2 bg-slate-50 rounded">
+                        <span class="text-slate-600">Journal Entries:</span>
+                        <span class="font-bold text-slate-800" id="export-journals">0</span>
+                    </div>
+                    <div class="flex justify-between p-2 bg-slate-50 rounded">
+                        <span class="text-slate-600">Bible Reflections:</span>
+                        <span class="font-bold text-slate-800" id="export-bible">0</span>
+                    </div>
+                    <div class="flex justify-between p-2 bg-slate-50 rounded">
+                        <span class="text-slate-600">Gym Workouts:</span>
+                        <span class="font-bold text-slate-800" id="export-gym">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-info-circle text-blue-500"></i>
+                    About Your Data
+                </div>
+                <p class="text-sm text-slate-600">
+                    All your data is stored locally on your device. When you export, you get a complete copy of your journey including all entries, moods, goals, and habits.
+                </p>
+            </div>
+        </main>
+        
+        <button onclick="scrollToTop()" class="fab-button">
+            <i class="fa-solid fa-arrow-up text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Accountability Partner Page -->
+    <div id="accountability-view" class="page-view">
+        <header class="glass-header text-white p-8 shadow-2xl" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateToPage('dashboard')" class="w-10 h-10 rounded-full bg-green-800 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-left text-green-300"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tighter" style="font-family: 'Archivo Black', sans-serif;">ACCOUNTABILITY</h1>
+                        <p class="text-[10px] text-green-200 font-bold uppercase tracking-widest">Stay Committed Together</p>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-5 -mt-6">
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-users text-green-600"></i>
+                    Add Accountability Partner
+                </div>
+                <input id="partner-name" class="input-field mb-3" placeholder="Partner's name...">
+                <input id="partner-email" class="input-field mb-3" type="email" placeholder="Partner's email...">
+                <select id="partner-frequency" class="input-field mb-3">
+                    <option value="daily">Daily Check-ins</option>
+                    <option value="weekly">Weekly Check-ins</option>
+                    <option value="biweekly">Bi-weekly Check-ins</option>
+                </select>
+                <button onclick="addPartner()" class="btn-primary">Add Partner</button>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-handshake text-green-500"></i>
+                    Your Accountability Partners
+                </div>
+                <div id="partners-list" class="space-y-2">
+                    <p class="text-sm text-slate-400">No accountability partners yet</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-clipboard-check text-green-500"></i>
+                    Weekly Commitments
+                </div>
+                <textarea id="weekly-commitment" class="textarea-field mb-3" placeholder="What are you committing to this week?"></textarea>
+                <button onclick="saveCommitment()" class="btn-primary">Share Commitment</button>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                    Accountability Tips
+                </div>
+                <div class="space-y-2 text-sm text-slate-600">
+                    <p>• Choose someone who genuinely supports your goals</p>
+                    <p>• Be honest about your progress and setbacks</p>
+                    <p>• Schedule regular check-ins</p>
+                    <p>• Celebrate wins together</p>
+                </div>
+            </div>
+        </main>
+        
+        <button onclick="scrollToTop()" class="fab-button">
+            <i class="fa-solid fa-arrow-up text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Earn/Withdrawal Page -->
+    <div id="earn-view" class="page-view">
+        <header class="glass-header text-white p-8 shadow-2xl" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateToPage('dashboard')" class="w-10 h-10 rounded-full bg-emerald-800 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-left text-emerald-300"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tighter" style="font-family: 'Archivo Black', sans-serif;">EARN REWARDS</h1>
+                        <p class="text-[10px] text-emerald-200 font-bold uppercase tracking-widest">Convert XP to Cash</p>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-5 -mt-6">
+            <!-- XP Balance Card -->
+            <div class="content-card mb-6" style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border: 2px solid #10b981;">
+                <div class="text-center">
+                    <p class="text-xs font-bold text-emerald-700 mb-2">YOUR XP BALANCE</p>
+                    <p class="text-5xl font-black text-emerald-900 mb-3" id="earn-xp-balance">0</p>
+                    <div class="inline-block px-4 py-2 bg-white rounded-full">
+                        <p class="text-sm font-bold text-emerald-800">
+                            = ₦<span id="earn-naira-value">0</span>
+                        </p>
+                    </div>
+                    <p class="text-xs text-emerald-700 mt-3">
+                        <i class="fa-solid fa-info-circle"></i> 7,000 XP = ₦3,500
+                    </p>
+                </div>
+            </div>
+
+            <!-- Withdrawal Status -->
+            <div class="content-card mb-6">
+                <div class="section-title">
+                    <i class="fa-solid fa-chart-line text-emerald-600"></i>
+                    Withdrawal Status
+                </div>
+                <div id="withdrawal-status" class="space-y-2">
+                    <!-- Status will be dynamically updated -->
+                </div>
+            </div>
+
+            <!-- Withdrawal Form -->
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-bank text-emerald-600"></i>
+                    Withdraw to Bank Account
+                </div>
+                
+                <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 mb-4">
+                    <p class="text-xs font-bold text-amber-800 mb-1">
+                        <i class="fa-solid fa-exclamation-triangle"></i> Minimum Withdrawal
+                    </p>
+                    <p class="text-sm text-amber-900">
+                        You need at least <strong>7,000 XP</strong> to make a withdrawal (₦3,500)
+                    </p>
+                </div>
+
+                <div id="withdrawal-form">
+                    <div class="mb-3">
+                        <label class="text-xs font-bold text-slate-600 mb-2 block">SELECT BANK</label>
+                        <select id="withdraw-bank" class="input-field" onchange="clearAccountVerification()">
+                            <option value="">-- Choose Your Bank --</option>
+                            <option value="access">Access Bank</option>
+                            <option value="gtbank">GTBank (Guaranty Trust Bank)</option>
+                            <option value="zenith">Zenith Bank</option>
+                            <option value="firstbank">First Bank of Nigeria</option>
+                            <option value="uba">United Bank for Africa (UBA)</option>
+                            <option value="sterling">Sterling Bank</option>
+                            <option value="fidelity">Fidelity Bank</option>
+                            <option value="union">Union Bank</option>
+                            <option value="wema">Wema Bank</option>
+                            <option value="polaris">Polaris Bank</option>
+                            <option value="stanbic">Stanbic IBTC</option>
+                            <option value="fcmb">FCMB (First City Monument Bank)</option>
+                            <option value="ecobank">Ecobank Nigeria</option>
+                            <option value="keystone">Keystone Bank</option>
+                            <option value="providus">Providus Bank</option>
+                            <option value="kuda">Kuda Bank</option>
+                            <option value="opay">OPay</option>
+                            <option value="palmpay">PalmPay</option>
+                            <option value="moniepoint">Moniepoint</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="text-xs font-bold text-slate-600 mb-2 block">ACCOUNT NUMBER</label>
+                        <input 
+                            id="withdraw-account" 
+                            class="input-field" 
+                            type="text" 
+                            maxlength="10" 
+                            placeholder="Enter 10-digit account number"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)"
+                            onchange="clearAccountVerification()"
+                        >
+                    </div>
+
+                    <button onclick="verifyAccountName()" class="w-full p-3 bg-blue-50 text-blue-700 rounded-xl font-bold text-sm mb-3 border border-blue-200">
+                        <i class="fa-solid fa-check-circle mr-2"></i>Verify Account Name
+                    </button>
+
+                    <div id="account-verification" style="display: none;" class="p-4 bg-green-50 rounded-xl border-2 border-green-300 mb-4">
+                        <p class="text-xs font-bold text-green-800 mb-2">
+                            <i class="fa-solid fa-check-circle"></i> ACCOUNT VERIFIED
+                        </p>
+                        <p class="text-sm font-bold text-slate-800" id="verified-account-name">--</p>
+                        <p class="text-xs text-slate-600 mt-1">
+                            <span id="verified-bank-name">--</span> • <span id="verified-account-number">--</span>
+                        </p>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-xs font-bold text-slate-600 mb-2 block">AMOUNT TO WITHDRAW (XP)</label>
+                        <input 
+                            id="withdraw-amount" 
+                            class="input-field" 
+                            type="number" 
+                            min="7000" 
+                            step="1000" 
+                            placeholder="Enter XP amount (min. 7,000)"
+                            oninput="updateWithdrawalPreview()"
+                        >
+                        <p class="text-xs text-slate-500 mt-2">
+                            You'll receive: <strong class="text-emerald-600">₦<span id="withdrawal-preview">0</span></strong>
+                        </p>
+                    </div>
+
+                    <button onclick="processWithdrawal()" class="btn-primary" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <i class="fa-solid fa-money-bill-wave mr-2"></i>Request Withdrawal
+                    </button>
+                </div>
+            </div>
+
+            <!-- How to Earn More XP -->
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                    How to Earn More XP
+                </div>
+                <div class="space-y-2 text-sm">
+                    <div class="flex items-start gap-2 p-2 bg-slate-50 rounded-lg">
+                        <span class="text-lg">📖</span>
+                        <div class="flex-1">
+                            <p class="font-bold text-slate-800">Daily Bible Reading</p>
+                            <p class="text-xs text-slate-600">+50 XP per entry</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 p-2 bg-slate-50 rounded-lg">
+                        <span class="text-lg">😊</span>
+                        <div class="flex-1">
+                            <p class="font-bold text-slate-800">Mood Check-in</p>
+                            <p class="text-xs text-slate-600">+20 XP per check-in</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 p-2 bg-slate-50 rounded-lg">
+                        <span class="text-lg">💛</span>
+                        <div class="flex-1">
+                            <p class="font-bold text-slate-800">Gratitude Entry</p>
+                            <p class="text-xs text-slate-600">+30 XP per entry</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 p-2 bg-slate-50 rounded-lg">
+                        <span class="text-lg">💪</span>
+                        <div class="flex-1">
+                            <p class="font-bold text-slate-800">Gym Workout</p>
+                            <p class="text-xs text-slate-600">+40 XP per workout</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 p-2 bg-slate-50 rounded-lg">
+                        <span class="text-lg">✅</span>
+                        <div class="flex-1">
+                            <p class="font-bold text-slate-800">Complete Daily Routine</p>
+                            <p class="text-xs text-slate-600">+10 XP per task</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 p-2 bg-slate-50 rounded-lg">
+                        <span class="text-lg">🎙️</span>
+                        <div class="flex-1">
+                            <p class="font-bold text-slate-800">Voice Journal Entry</p>
+                            <p class="text-xs text-slate-600">+20 XP per recording</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Withdrawal History -->
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-history text-emerald-500"></i>
+                    Withdrawal History
+                </div>
+                <div id="withdrawal-history" class="space-y-2">
+                    <p class="text-sm text-slate-400">No withdrawals yet</p>
+                </div>
+            </div>
+        </main>
+        
+        <button onclick="scrollToTop()" class="fab-button">
+            <i class="fa-solid fa-arrow-up text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Earn & Withdraw Page -->
+    <div id="earn-view" class="page-view">
+        <header class="glass-header text-white p-8 shadow-2xl" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateToPage('dashboard')" class="w-10 h-10 rounded-full bg-emerald-800 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-left text-emerald-300"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tighter" style="font-family: 'Archivo Black', sans-serif;">EARN & WITHDRAW</h1>
+                        <p class="text-[10px] text-emerald-200 font-bold uppercase tracking-widest">Convert XP to Cash</p>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center">
+                    <i class="fa-solid fa-naira-sign"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-5 -mt-6">
+            <!-- XP Balance Card -->
+            <div class="content-card mb-6">
+                <div class="text-center py-6">
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-2">Your XP Balance</p>
+                    <div class="text-5xl font-black text-emerald-600 mb-3" id="earn-xp-balance">0</div>
+                    <div class="flex items-center justify-center gap-2 mb-2">
+                        <div class="h-1 w-full bg-slate-200 rounded-full overflow-hidden max-w-xs">
+                            <div id="xp-progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-green-600" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-600">
+                        <span id="xp-to-minimum">7000</span> XP needed for withdrawal
+                    </p>
+                </div>
+            </div>
+
+            <!-- Conversion Rate -->
+            <div class="content-card mb-6">
+                <div class="section-title">
+                    <i class="fa-solid fa-exchange-alt text-emerald-600"></i>
+                    Conversion Rate
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-center">
+                        <p class="text-2xl font-black text-emerald-800">7,000</p>
+                        <p class="text-xs text-emerald-600 font-bold mt-1">XP Points</p>
+                    </div>
+                    <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-center">
+                        <p class="text-2xl font-black text-emerald-800">₦3,500</p>
+                        <p class="text-xs text-emerald-600 font-bold mt-1">Naira</p>
+                    </div>
+                </div>
+                <div class="mt-3 p-3 bg-blue-50 rounded-xl border border-blue-200">
+                    <p class="text-xs text-blue-800">
+                        <i class="fa-solid fa-info-circle mr-1"></i>
+                        <strong>You can earn:</strong> ₦<span id="potential-earnings">0</span> from your current XP
+                    </p>
+                </div>
+            </div>
+
+            <!-- Withdrawal Form -->
+            <div class="content-card mb-6" id="withdrawal-form">
+                <div class="section-title">
+                    <i class="fa-solid fa-university text-emerald-600"></i>
+                    Withdraw to Bank Account
+                </div>
+                
+                <div class="mb-3">
+                    <label class="text-xs font-bold text-slate-600 mb-2 block">Select Bank</label>
+                    <select id="bank-select" class="input-field" onchange="clearVerificationStatus()">
+                        <option value="">-- Choose your bank --</option>
+                        <option value="access">Access Bank</option>
+                        <option value="gtbank">GTBank</option>
+                        <option value="zenith">Zenith Bank</option>
+                        <option value="firstbank">First Bank</option>
+                        <option value="uba">UBA</option>
+                        <option value="fidelity">Fidelity Bank</option>
+                        <option value="union">Union Bank</option>
+                        <option value="sterling">Sterling Bank</option>
+                        <option value="stanbic">Stanbic IBTC</option>
+                        <option value="fcmb">FCMB</option>
+                        <option value="unity">Unity Bank</option>
+                        <option value="wema">Wema Bank</option>
+                        <option value="providus">Providus Bank</option>
+                        <option value="polaris">Polaris Bank</option>
+                        <option value="keystone">Keystone Bank</option>
+                        <option value="ecobank">Ecobank</option>
+                        <option value="heritage">Heritage Bank</option>
+                        <option value="jaiz">Jaiz Bank</option>
+                        <option value="kuda">Kuda Bank</option>
+                        <option value="opay">OPay</option>
+                        <option value="palmpay">PalmPay</option>
+                        <option value="moniepoint">Moniepoint</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="text-xs font-bold text-slate-600 mb-2 block">Account Number</label>
+                    <input id="account-number" class="input-field" type="text" maxlength="10" placeholder="0123456789" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onblur="verifyAccountNumber()">
+                </div>
+
+                <div id="account-verification" class="mb-3" style="display: none;">
+                    <div id="verification-loading" class="p-3 bg-blue-50 rounded-xl border border-blue-200" style="display: none;">
+                        <p class="text-sm text-blue-800 flex items-center gap-2">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                            Verifying account...
+                        </p>
+                    </div>
+                    <div id="verification-success" class="p-3 bg-green-50 rounded-xl border border-green-200" style="display: none;">
+                        <p class="text-sm text-green-800 font-bold">
+                            <i class="fa-solid fa-check-circle mr-1"></i>
+                            Account Name: <span id="verified-account-name"></span>
+                        </p>
+                    </div>
+                    <div id="verification-error" class="p-3 bg-red-50 rounded-xl border border-red-200" style="display: none;">
+                        <p class="text-sm text-red-800">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>
+                            <span id="verification-error-message">Unable to verify account</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="text-xs font-bold text-slate-600 mb-2 block">Amount to Withdraw</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">₦</span>
+                        <input id="withdrawal-amount" class="input-field pl-8" type="number" step="500" min="3500" placeholder="3,500" readonly>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">
+                        XP to use: <span id="xp-cost" class="font-bold text-emerald-600">7,000</span>
+                    </p>
+                </div>
+
+                <button onclick="initiateWithdrawal()" class="btn-primary" id="withdraw-btn" disabled style="background: #cbd5e1;">
+                    <i class="fa-solid fa-lock mr-2"></i>Verify Account First
+                </button>
+
+                <div class="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200">
+                    <p class="text-xs text-amber-900">
+                        <i class="fa-solid fa-shield-halved mr-1"></i>
+                        <strong>Security:</strong> Withdrawals are processed within 24-48 hours. Minimum withdrawal is ₦3,500 (7,000 XP).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Withdrawal History -->
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-history text-emerald-500"></i>
+                    Withdrawal History
+                </div>
+                <div id="withdrawal-history" class="space-y-2">
+                    <p class="text-sm text-slate-400">No withdrawals yet</p>
+                </div>
+            </div>
+
+            <!-- How to Earn More XP -->
+            <div class="content-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                    How to Earn More XP
+                </div>
+                <div class="space-y-2 text-sm text-slate-700">
+                    <div class="flex items-center gap-2 p-2 bg-slate-50 rounded">
+                        <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">10</span>
+                        <span>Complete daily routine tasks</span>
+                    </div>
+                    <div class="flex items-center gap-2 p-2 bg-slate-50 rounded">
+                        <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">20</span>
+                        <span>Voice journal entries</span>
+                    </div>
+                    <div class="flex items-center gap-2 p-2 bg-slate-50 rounded">
+                        <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">15</span>
+                        <span>Share weekly commitments</span>
+                    </div>
+                    <div class="flex items-center gap-2 p-2 bg-slate-50 rounded">
+                        <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">25</span>
+                        <span>Complete goals and habits</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <button onclick="scrollToTop()" class="fab-button">
+            <i class="fa-solid fa-arrow-up text-xl"></i>
+        </button>
+    </div>
+
     <!-- History View -->
     <div id="history-view" class="page-view">
         <header class="glass-header text-white p-8 shadow-2xl">
@@ -1652,38 +2589,7 @@
         </div>
     </nav>
 
-    <script>
-
-        
-// ==========================================
-// FIREBASE CONFIGURATION - ADD THIS FIRST!
-// ==========================================
-
-// YOUR FIREBASE CONFIG HERE
-const firebaseConfig = {
-  apiKey: "AIzaSyC44G55Ficz4mXWjhp_hePKPCIqTpeGDn4",
-  authDomain: "daily-dawn-1e86f.firebaseapp.com",
-  projectId: "daily-dawn-1e86f",
-  storageBucket: "daily-dawn-1e86f.firebasestorage.app",
-  messagingSenderId: "677716588250",
-  appId: "1:677716588250:web:c56a62a10375835c0a17e3"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-// Global state
-let currentFirebaseUser = null;
-let currentUserData = null;
-
-// ==========================================
-// YOUR EXISTING CODE CONTINUES BELOW...
-// ==========================================
-
-// ... rest of your code ...
-
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Prevent keyboard shortcuts for viewing source
         document.addEventListener('keydown', function(e) {
             // Prevent F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
@@ -1728,6 +2634,7 @@ let currentUserData = null;
                 localStorage.setItem('currentUser', JSON.stringify(adminUser));
                 alert('Welcome Admin!');
                 updateProfileDisplay();
+                navigateToPage('dashboard');
                 return;
             }
 
@@ -1744,6 +2651,7 @@ let currentUserData = null;
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 alert('Welcome back, ' + user.name + '!');
                 updateProfileDisplay();
+                navigateToPage('dashboard');
             } else {
                 alert('Invalid username or password');
             }
@@ -1798,6 +2706,7 @@ let currentUserData = null;
             localStorage.setItem('currentUser', JSON.stringify(newUser));
             alert('Account created successfully! Welcome, ' + name + '!');
             updateProfileDisplay();
+            navigateToPage('dashboard');
         }
 
         function handleLogout() {
@@ -1969,6 +2878,13 @@ let currentUserData = null;
             if (page === 'learning') loadLearningPage();
             if (page === 'finance') loadFinancePage();
             if (page === 'productivity') loadProductivityPage();
+            if (page === 'alarms') renderAlarms();
+            if (page === 'emotions') loadEmotionsPage();
+            if (page === 'analytics') loadAnalyticsPage();
+            if (page === 'voice-journal') renderVoiceRecordings();
+            if (page === 'export-data') loadExportPage();
+            if (page === 'accountability') renderPartners();
+            if (page === 'earn') loadEarnPage();
 
             scrollToTop();
         }
@@ -2983,7 +3899,1088 @@ let currentUserData = null;
         function loadDashboard() {
             updateXPDisplay();
             renderRecentActivity();
+            loadDailyRoutine();
         }
+
+        // Daily Routine Checklist Functions
+        function getDefaultRoutines() {
+            return [
+                { id: 1, text: 'Morning Prayer', checked: false },
+                { id: 2, text: 'Read Bible', checked: false },
+                { id: 3, text: 'Exercise/Gym', checked: false },
+                { id: 4, text: 'Healthy Breakfast', checked: false },
+                { id: 5, text: 'Journal Entry', checked: false },
+                { id: 6, text: 'Gratitude Practice', checked: false },
+                { id: 7, text: 'Learn Something New', checked: false },
+                { id: 8, text: 'Evening Reflection', checked: false }
+            ];
+        }
+
+        function loadDailyRoutine() {
+            const today = new Date().toDateString();
+            const savedDate = localStorage.getItem('routineDate');
+            let routines = JSON.parse(localStorage.getItem('dailyRoutines') || 'null');
+
+            // Reset if it's a new day
+            if (savedDate !== today || !routines) {
+                routines = getDefaultRoutines();
+                localStorage.setItem('dailyRoutines', JSON.stringify(routines));
+                localStorage.setItem('routineDate', today);
+            }
+
+            renderDailyRoutine(routines);
+        }
+
+        function renderDailyRoutine(routines) {
+            const container = document.getElementById('routine-checklist');
+            const progressDisplay = document.getElementById('routine-progress');
+            
+            if (!container || !progressDisplay) return;
+            
+            const completed = routines.filter(r => r.checked).length;
+            const total = routines.length;
+            progressDisplay.textContent = `${completed}/${total}`;
+
+            container.innerHTML = routines.map(routine => `
+                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="habit-checkbox ${routine.checked ? 'checked' : ''}" onclick="toggleRoutine(${routine.id})">
+                        ${routine.checked ? '<i class="fa-solid fa-check text-white text-xs"></i>' : ''}
+                    </div>
+                    <span class="text-sm font-medium text-slate-700 ${routine.checked ? 'line-through text-slate-400' : ''}">${routine.text}</span>
+                </div>
+            `).join('');
+        }
+
+        function toggleRoutine(routineId) {
+            let routines = JSON.parse(localStorage.getItem('dailyRoutines') || '[]');
+            const routine = routines.find(r => r.id === routineId);
+            
+            if (routine) {
+                routine.checked = !routine.checked;
+                localStorage.setItem('dailyRoutines', JSON.stringify(routines));
+                renderDailyRoutine(routines);
+                
+                // Award XP for completing a routine
+                if (routine.checked) {
+                    addXP(10, `Completed: ${routine.text}`);
+                }
+            }
+        }
+
+        function resetDailyRoutine() {
+            if (confirm('Are you sure you want to reset today\'s routine checklist?')) {
+                const routines = getDefaultRoutines();
+                localStorage.setItem('dailyRoutines', JSON.stringify(routines));
+                localStorage.setItem('routineDate', new Date().toDateString());
+                renderDailyRoutine(routines);
+            }
+        }
+
+        // AI Coach Functions
+        function sendAICoachMessage() {
+            const input = document.getElementById('ai-coach-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            const chatContainer = document.getElementById('ai-chat-messages');
+            
+            // Add user message
+            chatContainer.innerHTML += `
+                <div class="p-3 bg-slate-100 rounded-xl border border-slate-200 ml-8">
+                    <p class="text-sm font-bold text-slate-700 mb-1">You</p>
+                    <p class="text-sm text-slate-600">${message}</p>
+                </div>
+            `;
+
+            // Simulate AI response
+            setTimeout(() => {
+                const responses = [
+                    "That's a great question! Remember, progress is made one step at a time. Focus on consistency rather than perfection.",
+                    "I hear you. It's important to celebrate small wins along the way. What's one thing you did well today?",
+                    "Growth happens outside your comfort zone. What's one small action you can take today toward your goal?",
+                    "Remember why you started. Your 'why' is your fuel when motivation runs low. Stay committed to your vision!",
+                    "Every setback is a setup for a comeback. What can you learn from this experience?"
+                ];
+                const response = responses[Math.floor(Math.random() * responses.length)];
+                
+                chatContainer.innerHTML += `
+                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 mr-8">
+                        <p class="text-sm font-bold text-amber-800 mb-1">AI Coach</p>
+                        <p class="text-sm text-slate-700">${response}</p>
+                    </div>
+                `;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 1000);
+
+            input.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function quickAIPrompt(prompt) {
+            document.getElementById('ai-coach-input').value = prompt;
+            sendAICoachMessage();
+        }
+
+        // Alarms Functions
+        function addAlarm() {
+            const title = document.getElementById('alarm-title').value.trim();
+            const time = document.getElementById('alarm-time').value;
+            const repeat = document.getElementById('alarm-repeat').value;
+            const message = document.getElementById('alarm-message').value.trim();
+
+            if (!title || !time) {
+                alert('Please fill in title and time');
+                return;
+            }
+
+            const alarms = JSON.parse(localStorage.getItem('alarms') || '[]');
+            alarms.push({
+                id: Date.now(),
+                title,
+                time,
+                repeat,
+                message,
+                enabled: true,
+                timestamp: Date.now()
+            });
+
+            localStorage.setItem('alarms', JSON.stringify(alarms));
+            
+            document.getElementById('alarm-title').value = '';
+            document.getElementById('alarm-time').value = '';
+            document.getElementById('alarm-message').value = '';
+            
+            renderAlarms();
+            alert('✓ Alarm set successfully!');
+        }
+
+        function renderAlarms() {
+            const alarms = JSON.parse(localStorage.getItem('alarms') || '[]');
+            const container = document.getElementById('alarms-list');
+
+            if (alarms.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-400">No alarms set yet</p>';
+                return;
+            }
+
+            container.innerHTML = alarms.map(alarm => `
+                <div class="p-3 bg-orange-50 rounded-xl border border-orange-200 flex items-center justify-between">
+                    <div class="flex-1">
+                        <p class="font-bold text-slate-800">${alarm.title}</p>
+                        <p class="text-sm text-slate-600">${alarm.time} - ${alarm.repeat}</p>
+                        ${alarm.message ? `<p class="text-xs text-slate-500 mt-1">${alarm.message}</p>` : ''}
+                    </div>
+                    <button onclick="deleteAlarm(${alarm.id})" class="text-red-600 ml-3">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deleteAlarm(id) {
+            if (!confirm('Delete this alarm?')) return;
+            
+            let alarms = JSON.parse(localStorage.getItem('alarms') || '[]');
+            alarms = alarms.filter(a => a.id !== id);
+            localStorage.setItem('alarms', JSON.stringify(alarms));
+            renderAlarms();
+        }
+
+        // Emotions Analysis Functions
+        function loadEmotionsPage() {
+            const moods = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+            
+            if (moods.length === 0) {
+                document.getElementById('common-mood').textContent = 'No data yet';
+                document.getElementById('mood-trend').textContent = 'Start tracking to see patterns';
+                return;
+            }
+
+            // Calculate most common mood
+            const moodCounts = {};
+            moods.forEach(m => {
+                moodCounts[m.mood] = (moodCounts[m.mood] || 0) + 1;
+            });
+
+            const commonMood = Object.entries(moodCounts).sort((a, b) => b[1] - a[1])[0][0];
+            document.getElementById('common-mood').textContent = commonMood.charAt(0).toUpperCase() + commonMood.slice(1);
+
+            // Render emotion chart
+            const chartContainer = document.getElementById('emotion-chart');
+            const total = moods.length;
+            
+            chartContainer.innerHTML = Object.entries(moodCounts)
+                .sort((a, b) => b[1] - a[1])
+                .map(([mood, count]) => {
+                    const percentage = ((count / total) * 100).toFixed(0);
+                    const emojis = {
+                        amazing: '🤩',
+                        happy: '😊',
+                        okay: '😐',
+                        sad: '😔',
+                        stressed: '😰'
+                    };
+                    return `
+                        <div class="flex items-center gap-2">
+                            <span class="text-2xl">${emojis[mood] || '😊'}</span>
+                            <div class="flex-1">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-bold text-slate-700">${mood.charAt(0).toUpperCase() + mood.slice(1)}</span>
+                                    <span class="text-xs text-slate-500">${percentage}%</span>
+                                </div>
+                                <div class="h-2 bg-slate-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-pink-500 to-rose-500" style="width: ${percentage}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        // Analytics Functions
+        function loadAnalyticsPage() {
+            const moods = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+            const gratitude = JSON.parse(localStorage.getItem('gratitudeEntries') || '[]');
+            const journal = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+            const bible = JSON.parse(localStorage.getItem('bibleEntries') || '[]');
+            const gym = JSON.parse(localStorage.getItem('gymEntries') || '[]');
+            const habits = JSON.parse(localStorage.getItem('habits') || '[]');
+            const goals = JSON.parse(localStorage.getItem('goals') || '[]');
+
+            const totalEntries = moods.length + gratitude.length + journal.length + bible.length + gym.length;
+            document.getElementById('total-entries').textContent = totalEntries;
+            document.getElementById('habits-count').textContent = habits.length;
+            
+            const completedGoals = goals.filter(g => g.progress >= 100).length;
+            document.getElementById('goals-achieved').textContent = completedGoals;
+
+            // Calculate streak
+            const allDates = [...moods, ...gratitude, ...journal, ...bible, ...gym]
+                .map(e => new Date(e.timestamp).toDateString())
+                .filter((v, i, a) => a.indexOf(v) === i)
+                .sort((a, b) => new Date(b) - new Date(a));
+
+            let streak = 0;
+            const today = new Date().toDateString();
+            
+            if (allDates.includes(today)) {
+                streak = 1;
+                for (let i = 1; i < allDates.length; i++) {
+                    const prevDate = new Date(allDates[i-1]);
+                    const currDate = new Date(allDates[i]);
+                    const diffDays = Math.floor((prevDate - currDate) / (1000 * 60 * 60 * 24));
+                    if (diffDays === 1) streak++;
+                    else break;
+                }
+            }
+
+            document.getElementById('current-streak').textContent = streak + ' days';
+
+            // Render weekly activity
+            renderWeeklyActivity();
+        }
+
+        function renderWeeklyActivity() {
+            const container = document.getElementById('weekly-activity');
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            
+            container.innerHTML = days.map((day, index) => {
+                const activity = Math.floor(Math.random() * 10); // Simulated for now
+                const percentage = (activity / 10) * 100;
+                return `
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-slate-600 w-8">${day}</span>
+                        <div class="flex-1 h-6 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-blue-500 to-blue-600" style="width: ${percentage}%"></div>
+                        </div>
+                        <span class="text-xs text-slate-500 w-6">${activity}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Voice Journal Functions
+        let isRecording = false;
+        let recordingTimer = null;
+        let recordingSeconds = 0;
+
+        function toggleVoiceRecording() {
+            const btn = document.getElementById('voice-record-btn');
+            const status = document.getElementById('voice-status');
+            const controls = document.getElementById('voice-controls');
+
+            if (!isRecording) {
+                // Start recording
+                isRecording = true;
+                btn.classList.add('animate-pulse');
+                btn.style.background = 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)';
+                status.textContent = 'Recording...';
+                controls.style.display = 'flex';
+                
+                recordingSeconds = 0;
+                recordingTimer = setInterval(() => {
+                    recordingSeconds++;
+                    const mins = Math.floor(recordingSeconds / 60).toString().padStart(2, '0');
+                    const secs = (recordingSeconds % 60).toString().padStart(2, '0');
+                    document.getElementById('voice-timer').textContent = `${mins}:${secs}`;
+                }, 1000);
+            } else {
+                stopVoiceRecording();
+            }
+        }
+
+        function stopVoiceRecording() {
+            isRecording = false;
+            const btn = document.getElementById('voice-record-btn');
+            const status = document.getElementById('voice-status');
+            
+            btn.classList.remove('animate-pulse');
+            btn.style.background = 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)';
+            status.textContent = 'Recording stopped';
+            
+            if (recordingTimer) {
+                clearInterval(recordingTimer);
+                recordingTimer = null;
+            }
+        }
+
+        function saveVoiceEntry() {
+            stopVoiceRecording();
+            
+            const recordings = JSON.parse(localStorage.getItem('voiceRecordings') || '[]');
+            recordings.push({
+                id: Date.now(),
+                duration: recordingSeconds,
+                timestamp: Date.now(),
+                date: new Date().toLocaleDateString()
+            });
+            
+            localStorage.setItem('voiceRecordings', JSON.stringify(recordings));
+            
+            document.getElementById('voice-status').textContent = 'Tap to start recording';
+            document.getElementById('voice-timer').textContent = '00:00';
+            document.getElementById('voice-controls').style.display = 'none';
+            
+            renderVoiceRecordings();
+            alert('✓ Voice entry saved!');
+            addXP(20, 'Voice journal entry');
+        }
+
+        function cancelVoiceRecording() {
+            stopVoiceRecording();
+            document.getElementById('voice-status').textContent = 'Tap to start recording';
+            document.getElementById('voice-timer').textContent = '00:00';
+            document.getElementById('voice-controls').style.display = 'none';
+        }
+
+        function renderVoiceRecordings() {
+            const recordings = JSON.parse(localStorage.getItem('voiceRecordings') || '[]');
+            const container = document.getElementById('voice-recordings');
+
+            if (recordings.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-400">No recordings yet</p>';
+                return;
+            }
+
+            container.innerHTML = recordings.reverse().map(rec => {
+                const mins = Math.floor(rec.duration / 60);
+                const secs = rec.duration % 60;
+                return `
+                    <div class="p-3 bg-purple-50 rounded-xl border border-purple-200 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center">
+                                <i class="fa-solid fa-play text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-slate-800">Voice Entry</p>
+                                <p class="text-xs text-slate-500">${rec.date} • ${mins}:${secs.toString().padStart(2, '0')}</p>
+                            </div>
+                        </div>
+                        <button onclick="deleteVoiceRecording(${rec.id})" class="text-red-600">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteVoiceRecording(id) {
+            if (!confirm('Delete this recording?')) return;
+            
+            let recordings = JSON.parse(localStorage.getItem('voiceRecordings') || '[]');
+            recordings = recordings.filter(r => r.id !== id);
+            localStorage.setItem('voiceRecordings', JSON.stringify(recordings));
+            renderVoiceRecordings();
+        }
+
+        // Export Data Functions
+        function loadExportPage() {
+            const moods = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+            const gratitude = JSON.parse(localStorage.getItem('gratitudeEntries') || '[]');
+            const journal = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+            const bible = JSON.parse(localStorage.getItem('bibleEntries') || '[]');
+            const gym = JSON.parse(localStorage.getItem('gymEntries') || '[]');
+
+            document.getElementById('export-moods').textContent = moods.length;
+            document.getElementById('export-gratitude').textContent = gratitude.length;
+            document.getElementById('export-journals').textContent = journal.length;
+            document.getElementById('export-bible').textContent = bible.length;
+            document.getElementById('export-gym').textContent = gym.length;
+        }
+
+        function exportPDF() {
+            alert('PDF export feature coming soon! This will generate a beautiful PDF report of your entire journey.');
+        }
+
+        function exportCSV() {
+            const moods = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+            const gratitude = JSON.parse(localStorage.getItem('gratitudeEntries') || '[]');
+            const journal = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+
+            let csv = 'Type,Date,Content,Mood\n';
+            
+            moods.forEach(m => {
+                csv += `Mood,"${new Date(m.timestamp).toLocaleString()}","${m.notes || ''}","${m.mood}"\n`;
+            });
+            
+            gratitude.forEach(g => {
+                csv += `Gratitude,"${new Date(g.timestamp).toLocaleString()}","${g.content}",""\n`;
+            });
+            
+            journal.forEach(j => {
+                csv += `Journal,"${new Date(j.timestamp).toLocaleString()}","${j.title}: ${j.body}",""\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `daily-dawn-export-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            
+            alert('✓ CSV exported successfully!');
+        }
+
+        function exportJSON() {
+            const allData = {
+                moods: JSON.parse(localStorage.getItem('moodHistory') || '[]'),
+                gratitude: JSON.parse(localStorage.getItem('gratitudeEntries') || '[]'),
+                journal: JSON.parse(localStorage.getItem('journalEntries') || '[]'),
+                bible: JSON.parse(localStorage.getItem('bibleEntries') || '[]'),
+                gym: JSON.parse(localStorage.getItem('gymEntries') || '[]'),
+                habits: JSON.parse(localStorage.getItem('habits') || '[]'),
+                goals: JSON.parse(localStorage.getItem('goals') || '[]'),
+                exportDate: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `daily-dawn-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            alert('✓ JSON backup exported successfully!');
+        }
+
+        // Accountability Functions
+        function addPartner() {
+            const name = document.getElementById('partner-name').value.trim();
+            const email = document.getElementById('partner-email').value.trim();
+            const frequency = document.getElementById('partner-frequency').value;
+
+            if (!name || !email) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const partners = JSON.parse(localStorage.getItem('accountabilityPartners') || '[]');
+            partners.push({
+                id: Date.now(),
+                name,
+                email,
+                frequency,
+                timestamp: Date.now()
+            });
+
+            localStorage.setItem('accountabilityPartners', JSON.stringify(partners));
+            
+            document.getElementById('partner-name').value = '';
+            document.getElementById('partner-email').value = '';
+            
+            renderPartners();
+            alert('✓ Accountability partner added!');
+        }
+
+        function renderPartners() {
+            const partners = JSON.parse(localStorage.getItem('accountabilityPartners') || '[]');
+            const container = document.getElementById('partners-list');
+
+            if (partners.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-400">No accountability partners yet</p>';
+                return;
+            }
+
+            container.innerHTML = partners.map(partner => `
+                <div class="p-3 bg-green-50 rounded-xl border border-green-200 flex items-center justify-between">
+                    <div class="flex-1">
+                        <p class="font-bold text-slate-800">${partner.name}</p>
+                        <p class="text-sm text-slate-600">${partner.email}</p>
+                        <p class="text-xs text-slate-500 mt-1">${partner.frequency} check-ins</p>
+                    </div>
+                    <button onclick="deletePartner(${partner.id})" class="text-red-600 ml-3">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deletePartner(id) {
+            if (!confirm('Remove this accountability partner?')) return;
+            
+            let partners = JSON.parse(localStorage.getItem('accountabilityPartners') || '[]');
+            partners = partners.filter(p => p.id !== id);
+            localStorage.setItem('accountabilityPartners', JSON.stringify(partners));
+            renderPartners();
+        }
+
+        function saveCommitment() {
+            const commitment = document.getElementById('weekly-commitment').value.trim();
+            
+            if (!commitment) {
+                alert('Please enter your commitment');
+                return;
+            }
+
+            const commitments = JSON.parse(localStorage.getItem('weeklyCommitments') || '[]');
+            commitments.push({
+                id: Date.now(),
+                text: commitment,
+                week: new Date().toLocaleDateString(),
+                timestamp: Date.now()
+            });
+
+            localStorage.setItem('weeklyCommitments', JSON.stringify(commitments));
+            
+            document.getElementById('weekly-commitment').value = '';
+            alert('✓ Commitment saved and shared with your accountability partners!');
+            addXP(15, 'Weekly commitment shared');
+        }
+
+        // Earn & Withdraw Functions
+        function loadEarnPage() {
+            const xpData = JSON.parse(localStorage.getItem('xpData') || '{"xp": 0, "level": 1}');
+            const currentXP = xpData.xp;
+            
+            // Update XP balance display
+            document.getElementById('earn-xp-balance').textContent = currentXP.toLocaleString();
+            
+            // Calculate progress to minimum
+            const minimumXP = 7000;
+            const remaining = Math.max(0, minimumXP - currentXP);
+            document.getElementById('xp-to-minimum').textContent = remaining.toLocaleString();
+            
+            // Update progress bar
+            const progressPercent = Math.min(100, (currentXP / minimumXP) * 100);
+            document.getElementById('xp-progress-bar').style.width = progressPercent + '%';
+            
+            // Calculate potential earnings
+            const potentialNaira = Math.floor(currentXP / 7000) * 3500;
+            document.getElementById('potential-earnings').textContent = potentialNaira.toLocaleString();
+            
+            // Set withdrawal amount
+            document.getElementById('withdrawal-amount').value = potentialNaira > 0 ? 3500 : 0;
+            document.getElementById('xp-cost').textContent = '7,000';
+            
+            // Load withdrawal history
+            renderWithdrawalHistory();
+        }
+
+        function clearVerificationStatus() {
+            document.getElementById('account-verification').style.display = 'none';
+            document.getElementById('verification-loading').style.display = 'none';
+            document.getElementById('verification-success').style.display = 'none';
+            document.getElementById('verification-error').style.display = 'none';
+            
+            const withdrawBtn = document.getElementById('withdraw-btn');
+            withdrawBtn.disabled = true;
+            withdrawBtn.style.background = '#cbd5e1';
+            withdrawBtn.innerHTML = '<i class="fa-solid fa-lock mr-2"></i>Verify Account First';
+        }
+
+        function verifyAccountNumber() {
+            const bank = document.getElementById('bank-select').value;
+            const accountNumber = document.getElementById('account-number').value.trim();
+            
+            if (!bank) {
+                alert('Please select a bank first');
+                return;
+            }
+            
+            if (accountNumber.length !== 10) {
+                alert('Please enter a valid 10-digit account number');
+                return;
+            }
+
+            const verificationDiv = document.getElementById('account-verification');
+            const loadingDiv = document.getElementById('verification-loading');
+            const successDiv = document.getElementById('verification-success');
+            const errorDiv = document.getElementById('verification-error');
+            
+            // Show verification section
+            verificationDiv.style.display = 'block';
+            loadingDiv.style.display = 'block';
+            successDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            
+            // Simulate account verification (In real implementation, this would call a bank API)
+            setTimeout(() => {
+                loadingDiv.style.display = 'none';
+                
+                // Simulated verification - in production, this would verify against actual bank API
+                const isValid = Math.random() > 0.1; // 90% success rate for demo
+                
+                if (isValid) {
+                    // Generate a realistic Nigerian name
+                    const firstNames = ['Adebayo', 'Chioma', 'Emeka', 'Fatima', 'Ibrahim', 'Ngozi', 'Oluwaseun', 'Yusuf', 'Aisha', 'Tunde'];
+                    const lastNames = ['Okonkwo', 'Adeleke', 'Mohammed', 'Nwosu', 'Bakare', 'Eze', 'Okeke', 'Hassan', 'Adeyemi', 'Musa'];
+                    const accountName = firstNames[Math.floor(Math.random() * firstNames.length)] + ' ' + 
+                                       lastNames[Math.floor(Math.random() * lastNames.length)];
+                    
+                    document.getElementById('verified-account-name').textContent = accountName;
+                    successDiv.style.display = 'block';
+                    
+                    // Save verified account details
+                    const verifiedAccount = {
+                        bank: bank,
+                        accountNumber: accountNumber,
+                        accountName: accountName,
+                        verified: true
+                    };
+                    localStorage.setItem('verifiedAccount', JSON.stringify(verifiedAccount));
+                    
+                    // Enable withdrawal button
+                    const xpData = JSON.parse(localStorage.getItem('xpData') || '{"xp": 0}');
+                    if (xpData.xp >= 7000) {
+                        const withdrawBtn = document.getElementById('withdraw-btn');
+                        withdrawBtn.disabled = false;
+                        withdrawBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                        withdrawBtn.innerHTML = '<i class="fa-solid fa-check-circle mr-2"></i>Withdraw ₦3,500';
+                    }
+                } else {
+                    document.getElementById('verification-error-message').textContent = 
+                        'Unable to verify account. Please check your bank and account number.';
+                    errorDiv.style.display = 'block';
+                    localStorage.removeItem('verifiedAccount');
+                }
+            }, 2000);
+        }
+
+        function initiateWithdrawal() {
+            const xpData = JSON.parse(localStorage.getItem('xpData') || '{"xp": 0}');
+            const currentXP = xpData.xp;
+            
+            if (currentXP < 7000) {
+                alert('Insufficient XP! You need at least 7,000 XP to withdraw.');
+                return;
+            }
+
+            const verifiedAccount = JSON.parse(localStorage.getItem('verifiedAccount') || 'null');
+            
+            if (!verifiedAccount || !verifiedAccount.verified) {
+                alert('Please verify your account first');
+                return;
+            }
+
+            const confirmMsg = `Withdraw ₦3,500 to:\n\n` +
+                              `Bank: ${getBankName(verifiedAccount.bank)}\n` +
+                              `Account: ${verifiedAccount.accountNumber}\n` +
+                              `Name: ${verifiedAccount.accountName}\n\n` +
+                              `This will deduct 7,000 XP from your balance.\n\n` +
+                              `Continue?`;
+
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+
+            // Process withdrawal
+            const newXP = currentXP - 7000;
+            xpData.xp = newXP;
+            localStorage.setItem('xpData', JSON.stringify(xpData));
+
+            // Save withdrawal record
+            const withdrawals = JSON.parse(localStorage.getItem('withdrawals') || '[]');
+            withdrawals.push({
+                id: Date.now(),
+                amount: 3500,
+                xpCost: 7000,
+                bank: verifiedAccount.bank,
+                accountNumber: verifiedAccount.accountNumber,
+                accountName: verifiedAccount.accountName,
+                status: 'pending',
+                timestamp: Date.now(),
+                date: new Date().toLocaleString()
+            });
+            localStorage.setItem('withdrawals', JSON.stringify(withdrawals));
+
+            // Clear verified account
+            localStorage.removeItem('verifiedAccount');
+            
+            // Reset form
+            document.getElementById('bank-select').value = '';
+            document.getElementById('account-number').value = '';
+            clearVerificationStatus();
+
+            alert('✓ Withdrawal request submitted successfully!\n\n' +
+                  'Your ₦3,500 will be processed within 24-48 hours.\n' +
+                  'You will receive a confirmation once the transfer is complete.');
+
+            // Reload page to show updated balance
+            loadEarnPage();
+            updateXPDisplay();
+        }
+
+        function getBankName(bankCode) {
+            const banks = {
+                'access': 'Access Bank',
+                'gtbank': 'GTBank',
+                'zenith': 'Zenith Bank',
+                'firstbank': 'First Bank',
+                'uba': 'UBA',
+                'fidelity': 'Fidelity Bank',
+                'union': 'Union Bank',
+                'sterling': 'Sterling Bank',
+                'stanbic': 'Stanbic IBTC',
+                'fcmb': 'FCMB',
+                'unity': 'Unity Bank',
+                'wema': 'Wema Bank',
+                'providus': 'Providus Bank',
+                'polaris': 'Polaris Bank',
+                'keystone': 'Keystone Bank',
+                'ecobank': 'Ecobank',
+                'heritage': 'Heritage Bank',
+                'jaiz': 'Jaiz Bank',
+                'kuda': 'Kuda Bank',
+                'opay': 'OPay',
+                'palmpay': 'PalmPay',
+                'moniepoint': 'Moniepoint'
+            };
+            return banks[bankCode] || bankCode;
+        }
+
+        function renderWithdrawalHistory() {
+            const withdrawals = JSON.parse(localStorage.getItem('withdrawals') || '[]');
+            const container = document.getElementById('withdrawal-history');
+
+            if (withdrawals.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-400">No withdrawals yet</p>';
+                return;
+            }
+
+            container.innerHTML = withdrawals.reverse().slice(0, 10).map(w => {
+                const statusColors = {
+                    'pending': 'bg-amber-50 border-amber-200 text-amber-800',
+                    'completed': 'bg-green-50 border-green-200 text-green-800',
+                    'failed': 'bg-red-50 border-red-200 text-red-800'
+                };
+                const statusIcons = {
+                    'pending': 'fa-clock',
+                    'completed': 'fa-check-circle',
+                    'failed': 'fa-exclamation-circle'
+                };
+                
+                return `
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <p class="font-bold text-slate-800">₦${w.amount.toLocaleString()}</p>
+                                <p class="text-xs text-slate-500">${getBankName(w.bank)} - ${w.accountNumber}</p>
+                                <p class="text-xs text-slate-600 mt-1">${w.accountName}</p>
+                            </div>
+                            <span class="px-2 py-1 rounded text-xs font-bold ${statusColors[w.status]}">
+                                <i class="fa-solid ${statusIcons[w.status]} mr-1"></i>
+                                ${w.status.toUpperCase()}
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-400">${w.date}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+
+        // Earn/Withdrawal Functions
+        function loadEarnPage() {
+            const xp = parseInt(localStorage.getItem('xp') || '0');
+            document.getElementById('earn-xp-balance').textContent = xp.toLocaleString();
+            
+            // Calculate naira value (7000 XP = 3500 Naira, so 1 XP = 0.5 Naira)
+            const nairaValue = Math.floor((xp / 7000) * 3500);
+            document.getElementById('earn-naira-value').textContent = nairaValue.toLocaleString();
+            
+            updateWithdrawalStatus(xp);
+            renderWithdrawalHistory();
+        }
+
+        function updateWithdrawalStatus(xp) {
+            const container = document.getElementById('withdrawal-status');
+            const minXP = 7000;
+            const remaining = minXP - xp;
+            
+            if (xp >= minXP) {
+                container.innerHTML = `
+                    <div class="p-4 bg-green-50 rounded-xl border-2 border-green-300">
+                        <p class="font-bold text-green-800 flex items-center gap-2">
+                            <i class="fa-solid fa-check-circle text-xl"></i>
+                            <span>You can withdraw now!</span>
+                        </p>
+                        <p class="text-sm text-green-700 mt-1">You have enough XP to make a withdrawal.</p>
+                    </div>
+                `;
+            } else {
+                const percentage = (xp / minXP) * 100;
+                container.innerHTML = `
+                    <div class="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                        <p class="font-bold text-amber-800 mb-2">
+                            <i class="fa-solid fa-hourglass-half"></i> Keep earning XP!
+                        </p>
+                        <p class="text-sm text-slate-700 mb-3">
+                            You need <strong class="text-amber-700">${remaining.toLocaleString()} more XP</strong> to withdraw
+                        </p>
+                        <div class="h-3 bg-slate-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-emerald-500 to-emerald-600" style="width: ${percentage}%"></div>
+                        </div>
+                        <p class="text-xs text-slate-600 mt-2">${percentage.toFixed(1)}% to minimum withdrawal</p>
+                    </div>
+                `;
+            }
+        }
+
+        function updateWithdrawalPreview() {
+            const xpAmount = parseInt(document.getElementById('withdraw-amount').value || '0');
+            const nairaAmount = Math.floor((xpAmount / 7000) * 3500);
+            document.getElementById('withdrawal-preview').textContent = nairaAmount.toLocaleString();
+        }
+
+        function clearAccountVerification() {
+            document.getElementById('account-verification').style.display = 'none';
+        }
+
+        const bankNames = {
+            'access': 'Access Bank',
+            'gtbank': 'GTBank',
+            'zenith': 'Zenith Bank',
+            'firstbank': 'First Bank of Nigeria',
+            'uba': 'United Bank for Africa',
+            'sterling': 'Sterling Bank',
+            'fidelity': 'Fidelity Bank',
+            'union': 'Union Bank',
+            'wema': 'Wema Bank',
+            'polaris': 'Polaris Bank',
+            'stanbic': 'Stanbic IBTC',
+            'fcmb': 'FCMB',
+            'ecobank': 'Ecobank Nigeria',
+            'keystone': 'Keystone Bank',
+            'providus': 'Providus Bank',
+            'kuda': 'Kuda Bank',
+            'opay': 'OPay',
+            'palmpay': 'PalmPay',
+            'moniepoint': 'Moniepoint'
+        };
+
+        function verifyAccountName() {
+            const bankCode = document.getElementById('withdraw-bank').value;
+            const accountNumber = document.getElementById('withdraw-account').value.trim();
+            
+            if (!bankCode) {
+                alert('Please select a bank');
+                return;
+            }
+            
+            if (!accountNumber || accountNumber.length !== 10) {
+                alert('Please enter a valid 10-digit account number');
+                return;
+            }
+
+            // Simulate account verification (In production, this would call a real bank API)
+            const verificationDiv = document.getElementById('account-verification');
+            const loadingMessage = 'Verifying account...';
+            
+            verificationDiv.style.display = 'block';
+            verificationDiv.innerHTML = `
+                <p class="text-sm text-blue-700">
+                    <i class="fa-solid fa-spinner fa-spin mr-2"></i>${loadingMessage}
+                </p>
+            `;
+
+            // Simulate API call delay
+            setTimeout(() => {
+                // Generate a realistic Nigerian name for demo purposes
+                const firstNames = ['Chukwu', 'Oluwaseun', 'Adewale', 'Ngozi', 'Emeka', 'Amaka', 'Tunde', 'Chioma', 'Ibrahim', 'Fatima', 'Aisha', 'Yusuf'];
+                const lastNames = ['Okafor', 'Adeyemi', 'Nwosu', 'Bello', 'Oladipo', 'Eze', 'Musa', 'Adeleke', 'Okoro', 'Hassan'];
+                const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                const accountName = `${randomFirstName} ${randomLastName}`;
+                
+                document.getElementById('verified-account-name').textContent = accountName;
+                document.getElementById('verified-bank-name').textContent = bankNames[bankCode];
+                document.getElementById('verified-account-number').textContent = accountNumber;
+                
+                verificationDiv.innerHTML = `
+                    <p class="text-xs font-bold text-green-800 mb-2">
+                        <i class="fa-solid fa-check-circle"></i> ACCOUNT VERIFIED
+                    </p>
+                    <p class="text-sm font-bold text-slate-800">${accountName}</p>
+                    <p class="text-xs text-slate-600 mt-1">
+                        ${bankNames[bankCode]} • ${accountNumber}
+                    </p>
+                `;
+                
+                // Store verification for withdrawal
+                sessionStorage.setItem('verifiedAccount', JSON.stringify({
+                    name: accountName,
+                    bank: bankCode,
+                    bankName: bankNames[bankCode],
+                    accountNumber: accountNumber,
+                    verified: true
+                }));
+                
+            }, 2000);
+        }
+
+        function processWithdrawal() {
+            const xp = parseInt(localStorage.getItem('xp') || '0');
+            const withdrawAmount = parseInt(document.getElementById('withdraw-amount').value || '0');
+            const verifiedAccount = JSON.parse(sessionStorage.getItem('verifiedAccount') || 'null');
+            
+            // Validations
+            if (!verifiedAccount || !verifiedAccount.verified) {
+                alert('⚠️ Please verify your account details first');
+                return;
+            }
+            
+            if (withdrawAmount < 7000) {
+                alert('⚠️ Minimum withdrawal is 7,000 XP (₦3,500)');
+                return;
+            }
+            
+            if (withdrawAmount > xp) {
+                alert('⚠️ Insufficient XP balance');
+                return;
+            }
+            
+            if (withdrawAmount % 1000 !== 0) {
+                alert('⚠️ Please enter XP amount in multiples of 1,000');
+                return;
+            }
+
+            const nairaAmount = Math.floor((withdrawAmount / 7000) * 3500);
+            
+            const confirmMessage = `
+CONFIRM WITHDRAWAL
+━━━━━━━━━━━━━━━━━━━━
+Amount: ${withdrawAmount.toLocaleString()} XP
+You'll Receive: ₦${nairaAmount.toLocaleString()}
+
+Bank: ${verifiedAccount.bankName}
+Account: ${verifiedAccount.accountNumber}
+Name: ${verifiedAccount.name}
+━━━━━━━━━━━━━━━━━━━━
+
+Proceed with withdrawal?
+            `.trim();
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+
+            // Process withdrawal
+            const newXP = xp - withdrawAmount;
+            localStorage.setItem('xp', newXP);
+            
+            // Save withdrawal record
+            const withdrawals = JSON.parse(localStorage.getItem('withdrawals') || '[]');
+            withdrawals.push({
+                id: Date.now(),
+                xpAmount: withdrawAmount,
+                nairaAmount: nairaAmount,
+                bank: verifiedAccount.bankName,
+                accountNumber: verifiedAccount.accountNumber,
+                accountName: verifiedAccount.name,
+                status: 'Pending',
+                requestDate: new Date().toISOString(),
+                timestamp: Date.now()
+            });
+            
+            localStorage.setItem('withdrawals', JSON.stringify(withdrawals));
+            
+            // Clear form and verification
+            document.getElementById('withdraw-amount').value = '';
+            document.getElementById('withdraw-bank').value = '';
+            document.getElementById('withdraw-account').value = '';
+            document.getElementById('account-verification').style.display = 'none';
+            sessionStorage.removeItem('verifiedAccount');
+            
+            // Refresh page
+            loadEarnPage();
+            updateXPDisplay();
+            
+            alert(`✅ WITHDRAWAL REQUEST SUBMITTED!
+
+Amount: ₦${nairaAmount.toLocaleString()}
+Account: ${verifiedAccount.accountNumber}
+
+Your withdrawal will be processed within 24-48 hours. You'll receive a notification once completed.`);
+        }
+
+        function renderWithdrawalHistory() {
+            const withdrawals = JSON.parse(localStorage.getItem('withdrawals') || '[]');
+            const container = document.getElementById('withdrawal-history');
+            
+            if (withdrawals.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-400">No withdrawals yet</p>';
+                return;
+            }
+
+            const statusColors = {
+                'Pending': 'bg-amber-50 border-amber-200 text-amber-800',
+                'Processing': 'bg-blue-50 border-blue-200 text-blue-800',
+                'Completed': 'bg-green-50 border-green-200 text-green-800',
+                'Failed': 'bg-red-50 border-red-200 text-red-800'
+            };
+
+            const statusIcons = {
+                'Pending': 'fa-clock',
+                'Processing': 'fa-spinner fa-spin',
+                'Completed': 'fa-check-circle',
+                'Failed': 'fa-times-circle'
+            };
+
+            container.innerHTML = withdrawals.reverse().map(w => {
+                const date = new Date(w.requestDate).toLocaleDateString();
+                const colorClass = statusColors[w.status] || statusColors['Pending'];
+                const iconClass = statusIcons[w.status] || statusIcons['Pending'];
+                
+                return `
+                    <div class="p-3 ${colorClass} rounded-xl border">
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="flex-1">
+                                <p class="font-bold text-slate-800">₦${w.nairaAmount.toLocaleString()}</p>
+                                <p class="text-xs text-slate-600">${w.xpAmount.toLocaleString()} XP</p>
+                            </div>
+                            <span class="text-xs font-bold px-2 py-1 rounded-full ${colorClass}">
+                                <i class="fa-solid ${iconClass} mr-1"></i>${w.status}
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-1">${w.bank} • ${w.accountNumber}</p>
+                        <p class="text-xs text-slate-500">${date}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+
+
 
         function renderRecentActivity() {
             const allEntries = [];
@@ -3474,11 +5471,11 @@ Recent Activity:
             location.reload();
         }
 
-        // Initialize
-        window.addEventListener('DOMContentLoaded', () => {
-            checkAuth();
-            setDailyInspiration();
+        // Initialize page on load
+        window.addEventListener("DOMContentLoaded", function() {
+            updateProfileDisplay();
             loadDashboard();
+            refreshInspiration();
         });
     </script>
 </body>
