@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -299,6 +300,126 @@
         }
         .workout-plan-card.advanced {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .learning-tab {
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .learning-tab.active {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+        }
+        .learning-tab:not(.active) {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .book-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .book-card:hover {
+            border-color: #8b5cf6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.2);
+        }
+        .book-cover {
+            width: 100%;
+            aspect-ratio: 2/3;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 0.75rem;
+            text-align: center;
+            padding: 0.5rem;
+            overflow: hidden;
+        }
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        .reading-progress-bar {
+            height: 0.5rem;
+            background: #e2e8f0;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .reading-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 100%);
+            transition: width 0.3s;
+        }
+        .book-status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .status-reading {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status-wishlist {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .quote-card {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .book-reader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 1000;
+            overflow-y: auto;
+            display: none;
+        }
+        .book-reader-container.active {
+            display: block;
+        }
+        .reader-controls {
+            position: sticky;
+            top: 0;
+            background: white;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 1rem;
+            z-index: 100;
+        }
+        .book-search-result {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .book-search-result:hover {
+            background: #f8fafc;
         }
     </style>
 </head>
@@ -1927,61 +2048,269 @@
         </header>
 
         <main class="p-5 -mt-6">
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-book text-purple-500"></i>
-                    Reading Log
-                </div>
-                <input id="book-title" class="input-field mb-3" placeholder="Book title">
-                <input id="pages-read" class="input-field mb-3" type="number" placeholder="Pages read today">
-                <textarea id="book-notes" class="textarea-field" placeholder="Key insights or quotes..."></textarea>
-                <button onclick="logReading()" class="btn-primary mt-4">Log Reading</button>
+            <!-- Learning Navigation Tabs -->
+            <div class="flex gap-2 mb-4 overflow-x-auto pb-2" style="scrollbar-width: none;">
+                <button class="learning-tab active" onclick="switchLearningTab('library')" id="learning-tab-library">
+                    <i class="fa-solid fa-book"></i> Library
+                </button>
+                <button class="learning-tab" onclick="switchLearningTab('reading')" id="learning-tab-reading">
+                    <i class="fa-solid fa-bookmark"></i> Reading
+                </button>
+                <button class="learning-tab" onclick="switchLearningTab('quotes')" id="learning-tab-quotes">
+                    <i class="fa-solid fa-quote-left"></i> Quotes
+                </button>
+                <button class="learning-tab" onclick="switchLearningTab('skills')" id="learning-tab-skills">
+                    <i class="fa-solid fa-graduation-cap"></i> Skills
+                </button>
             </div>
 
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-graduation-cap text-indigo-500"></i>
-                    Skills I'm Learning
+            <!-- Library Tab Content -->
+            <div id="learning-library-content" class="learning-tab-content">
+                <!-- Reading Goals -->
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-bullseye text-purple-500"></i>
+                        Reading Goals 2026
+                    </div>
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <div class="text-center p-4 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl">
+                            <p class="text-3xl font-black text-purple-600" id="books-read-count">0</p>
+                            <p class="text-xs font-bold text-purple-800">Books Read</p>
+                        </div>
+                        <div class="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl">
+                            <p class="text-3xl font-black text-blue-600" id="books-goal-count">24</p>
+                            <p class="text-xs font-bold text-blue-800">Annual Goal</p>
+                        </div>
+                        <div class="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl">
+                            <p class="text-3xl font-black text-green-600" id="pages-read-total">0</p>
+                            <p class="text-xs font-bold text-green-800">Pages Read</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <p class="text-sm font-bold text-slate-700">Annual Progress</p>
+                            <p class="text-sm font-bold text-purple-600"><span id="goal-percentage">0</span>%</p>
+                        </div>
+                        <div class="h-3 bg-slate-200 rounded-full overflow-hidden">
+                            <div id="goal-progress-bar" class="h-full bg-gradient-to-r from-purple-500 to-indigo-600 transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <button onclick="showSetGoalModal()" class="btn-primary text-sm">
+                        <i class="fa-solid fa-target"></i> Update Goal
+                    </button>
                 </div>
-                <input id="skill-name" class="input-field mb-3" placeholder="Skill (e.g., Spanish, Piano, Coding)">
-                <input id="practice-time" class="input-field mb-3" type="number" placeholder="Minutes practiced">
-                <textarea id="skill-notes" class="textarea-field" placeholder="What did I practice? What did I learn?"></textarea>
-                <button onclick="logSkill()" class="btn-primary mt-4">Log Practice</button>
+
+                <!-- Book Search -->
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-search text-blue-500"></i>
+                        Search Books
+                    </div>
+                    <p class="text-sm text-slate-600 mb-3">Search millions of books from Google Books</p>
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" id="book-search-input" class="input-field flex-1" placeholder="Search by title, author, or ISBN..." onkeypress="if(event.key === 'Enter') searchBooks()">
+                        <button onclick="searchBooks()" class="bg-blue-600 text-white px-6 rounded-xl font-bold text-sm">
+                            <i class="fa-solid fa-search"></i>
+                        </button>
+                    </div>
+                    <div id="book-search-results" class="max-h-96 overflow-y-auto rounded-xl border border-slate-200" style="display: none;">
+                        <!-- Search results will appear here -->
+                    </div>
+                </div>
+
+                <!-- Virtual Bookshelf -->
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-bookshelf text-amber-500"></i>
+                        My Bookshelf
+                    </div>
+                    <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
+                        <button onclick="filterBooks('all')" id="filter-all" class="px-4 py-2 rounded-lg text-sm font-bold bg-slate-900 text-white">
+                            All
+                        </button>
+                        <button onclick="filterBooks('reading')" id="filter-reading" class="px-4 py-2 rounded-lg text-sm font-bold bg-slate-100 text-slate-700">
+                            Reading
+                        </button>
+                        <button onclick="filterBooks('completed')" id="filter-completed" class="px-4 py-2 rounded-lg text-sm font-bold bg-slate-100 text-slate-700">
+                            Completed
+                        </button>
+                        <button onclick="filterBooks('wishlist')" id="filter-wishlist" class="px-4 py-2 rounded-lg text-sm font-bold bg-slate-100 text-slate-700">
+                            Wishlist
+                        </button>
+                    </div>
+                    <div id="bookshelf-grid" class="grid grid-cols-2 gap-4 mb-4">
+                        <!-- Books will be loaded here -->
+                        <p class="col-span-2 text-sm text-slate-500 text-center py-8">No books in your library yet. Search and add some!</p>
+                    </div>
+                </div>
+
+                <!-- Book Recommendations -->
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-star text-yellow-500"></i>
+                        Recommended for You
+                    </div>
+                    <p class="text-sm text-slate-600 mb-3">Based on your interests</p>
+                    <div id="recommendations-list" class="space-y-3">
+                        <!-- Recommendations will be loaded here -->
+                    </div>
+                    <button onclick="loadRecommendations()" class="btn-primary mt-3 text-sm">
+                        <i class="fa-solid fa-refresh"></i> Refresh Recommendations
+                    </button>
+                </div>
             </div>
 
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-lightbulb text-yellow-500"></i>
-                    Learning Tips
+            <!-- Reading Tab Content -->
+            <div id="learning-reading-content" class="learning-tab-content" style="display: none;">
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-book-open text-purple-500"></i>
+                        Currently Reading
+                    </div>
+                    <div id="currently-reading-list" class="space-y-3 mb-4">
+                        <p class="text-sm text-slate-500 text-center py-4">No books in progress</p>
+                    </div>
                 </div>
-                <div class="space-y-2 text-sm">
-                    <div class="tip-card">
-                        <p class="font-bold text-amber-800 mb-1">Spaced Repetition</p>
-                        <p class="text-xs text-amber-900">Review material at increasing intervals for better retention.</p>
+
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-chart-line text-green-500"></i>
+                        Reading Statistics
                     </div>
-                    <div class="tip-card">
-                        <p class="font-bold text-amber-800 mb-1">Active Recall</p>
-                        <p class="text-xs text-amber-900">Test yourself instead of re-reading. Struggle strengthens memory.</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="text-center p-4 bg-slate-50 rounded-xl">
+                            <p class="text-2xl font-black text-slate-900" id="avg-pages-per-day">0</p>
+                            <p class="text-xs font-bold text-slate-600">Avg Pages/Day</p>
+                        </div>
+                        <div class="text-center p-4 bg-slate-50 rounded-xl">
+                            <p class="text-2xl font-black text-slate-900" id="reading-streak">0</p>
+                            <p class="text-xs font-bold text-slate-600">Day Streak</p>
+                        </div>
+                        <div class="text-center p-4 bg-slate-50 rounded-xl">
+                            <p class="text-2xl font-black text-slate-900" id="total-books-read">0</p>
+                            <p class="text-xs font-bold text-slate-600">Total Books</p>
+                        </div>
+                        <div class="text-center p-4 bg-slate-50 rounded-xl">
+                            <p class="text-2xl font-black text-slate-900" id="reading-time-total">0</p>
+                            <p class="text-xs font-bold text-slate-600">Hours Read</p>
+                        </div>
                     </div>
-                    <div class="tip-card">
-                        <p class="font-bold text-amber-800 mb-1">Teach Others</p>
-                        <p class="text-xs text-amber-900">The best way to learn is to teach what you've learned.</p>
+                </div>
+
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-calendar-check text-blue-500"></i>
+                        Reading History
+                    </div>
+                    <div id="reading-history-list" class="space-y-2">
+                        <p class="text-sm text-slate-500 text-center py-4">No reading sessions logged</p>
                     </div>
                 </div>
             </div>
 
-            <div class="content-card">
-                <div class="section-title">
-                    <i class="fa-solid fa-list text-slate-500"></i>
-                    Learning Log
+            <!-- Quotes Tab Content -->
+            <div id="learning-quotes-content" class="learning-tab-content" style="display: none;">
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-plus text-purple-500"></i>
+                        Save Quote/Highlight
+                    </div>
+                    <input type="text" id="quote-book-title" class="input-field mb-3" placeholder="Book title">
+                    <textarea id="quote-text" class="textarea-field mb-3" placeholder="Quote or highlight..."></textarea>
+                    <input type="text" id="quote-page" class="input-field mb-3" placeholder="Page number (optional)">
+                    <button onclick="saveQuote()" class="btn-primary">Save Quote</button>
                 </div>
-                <div id="learning-entries"></div>
+
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-quote-left text-amber-500"></i>
+                        My Highlights & Quotes
+                    </div>
+                    <div id="quotes-list" class="space-y-3">
+                        <p class="text-sm text-slate-500 text-center py-4">No quotes saved yet</p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-lightbulb text-yellow-500"></i>
+                        Random Inspiration
+                    </div>
+                    <div id="random-quote-display" class="quote-card">
+                        <p class="text-sm font-medium text-amber-900 italic mb-2">"The more that you read, the more things you will know. The more that you learn, the more places you'll go."</p>
+                        <p class="text-xs font-bold text-amber-800">— Dr. Seuss</p>
+                    </div>
+                    <button onclick="showRandomQuote()" class="btn-primary text-sm">
+                        <i class="fa-solid fa-shuffle"></i> Show Another
+                    </button>
+                </div>
+            </div>
+
+            <!-- Skills Tab Content -->
+            <div id="learning-skills-content" class="learning-tab-content" style="display: none;">
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-graduation-cap text-indigo-500"></i>
+                        Skills I'm Learning
+                    </div>
+                    <input id="skill-name" class="input-field mb-3" placeholder="Skill (e.g., Spanish, Piano, Coding)">
+                    <input id="practice-time" class="input-field mb-3" type="number" placeholder="Minutes practiced">
+                    <textarea id="skill-notes" class="textarea-field" placeholder="What did I practice? What did I learn?"></textarea>
+                    <button onclick="logSkill()" class="btn-primary mt-4">Log Practice</button>
+                </div>
+
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-lightbulb text-yellow-500"></i>
+                        Learning Tips
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <div class="tip-card">
+                            <p class="font-bold text-amber-800 mb-1">Spaced Repetition</p>
+                            <p class="text-xs text-amber-900">Review material at increasing intervals for better retention.</p>
+                        </div>
+                        <div class="tip-card">
+                            <p class="font-bold text-amber-800 mb-1">Active Recall</p>
+                            <p class="text-xs text-amber-900">Test yourself instead of re-reading. Struggle strengthens memory.</p>
+                        </div>
+                        <div class="tip-card">
+                            <p class="font-bold text-amber-800 mb-1">Teach Others</p>
+                            <p class="text-xs text-amber-900">The best way to learn is to teach what you've learned.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-list text-slate-500"></i>
+                        Practice Log
+                    </div>
+                    <div id="learning-entries"></div>
+                </div>
             </div>
         </main>
         
         <button onclick="scrollToTop()" class="fab-button">
             <i class="fa-solid fa-arrow-up text-xl"></i>
         </button>
+    </div>
+
+    <!-- Book Reader Container -->
+    <div id="book-reader-container" class="book-reader-container">
+        <div class="reader-controls">
+            <div class="flex justify-between items-center">
+                <button onclick="closeBookReader()" class="text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Library
+                </button>
+                <h3 id="reader-book-title" class="font-bold text-sm text-slate-900"></h3>
+                <button onclick="toggleReaderSettings()" class="text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+            </div>
+        </div>
+        <div id="book-reader-content" class="p-6 max-w-3xl mx-auto">
+            <!-- Book content will be loaded here -->
+        </div>
     </div>
 
     <!-- Finance Page -->
@@ -3459,6 +3788,63 @@
                 <!-- Plan details will be loaded here -->
             </div>
             <button onclick="hideWorkoutPlanModal()" class="btn-primary mt-4" style="background: #e2e8f0; color: #64748b;">Close</button>
+        </div>
+    </div>
+
+
+    <!-- Set Reading Goal Modal -->
+    <div id="set-goal-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-black">Set Reading Goal</h3>
+                <button onclick="hideSetGoalModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <p class="text-sm text-slate-600 mb-4">How many books do you want to read this year?</p>
+            <input type="number" id="annual-reading-goal" class="input-field mb-3" placeholder="Number of books" min="1" value="24">
+            <button onclick="saveReadingGoal()" class="btn-primary">Save Goal</button>
+        </div>
+    </div>
+
+    <!-- Book Details Modal -->
+    <div id="book-details-modal" class="modal">
+        <div class="modal-content max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-black" id="book-detail-title">Book Details</h3>
+                <button onclick="hideBookDetailsModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div id="book-details-content">
+                <!-- Book details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Book Progress Modal -->
+    <div id="update-progress-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-black">Update Reading Progress</h3>
+                <button onclick="hideUpdateProgressModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <p class="text-sm font-bold text-slate-700 mb-2" id="progress-book-title"></p>
+            <div class="mb-3">
+                <label class="text-xs font-bold text-slate-600 block mb-1">Current Page</label>
+                <input type="number" id="current-page-input" class="input-field" placeholder="Page number">
+            </div>
+            <div class="mb-3">
+                <label class="text-xs font-bold text-slate-600 block mb-1">Total Pages</label>
+                <input type="number" id="total-pages-input" class="input-field" placeholder="Total pages" disabled>
+            </div>
+            <div class="mb-3">
+                <label class="text-xs font-bold text-slate-600 block mb-1">Reading Notes (optional)</label>
+                <textarea id="reading-notes-input" class="textarea-field" placeholder="Your thoughts..."></textarea>
+            </div>
+            <button onclick="saveReadingProgress()" class="btn-primary">Save Progress</button>
         </div>
     </div>
 
@@ -8119,6 +8505,661 @@ Keep recording your dreams to discover deeper patterns over time!
                     ${workout.notes ? `<p class="text-xs text-slate-500 mt-1">${workout.notes}</p>` : ''}
                 </div>
             `).join('');
+        }
+
+
+
+        // ===== BOOK LIBRARY FUNCTIONS =====
+
+        // Sample book data for recommendations
+        const bookRecommendations = [
+            { title: "Atomic Habits", author: "James Clear", category: "Self-Help" },
+            { title: "Deep Work", author: "Cal Newport", category: "Productivity" },
+            { title: "Thinking, Fast and Slow", author: "Daniel Kahneman", category: "Psychology" },
+            { title: "The 48 Laws of Power", author: "Robert Greene", category: "Strategy" },
+            { title: "Sapiens", author: "Yuval Noah Harari", category: "History" },
+            { title: "The Alchemist", author: "Paulo Coelho", category: "Fiction" },
+            { title: "Rich Dad Poor Dad", author: "Robert Kiyosaki", category: "Finance" },
+            { title: "The 7 Habits of Highly Effective People", author: "Stephen Covey", category: "Self-Help" }
+        ];
+
+        let currentBookForProgress = null;
+
+        function switchLearningTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.learning-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const tabButton = document.getElementById('learning-tab-' + tab);
+            if (tabButton) {
+                tabButton.classList.add('active');
+            }
+            
+            // Update content
+            document.querySelectorAll('.learning-tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            const tabContent = document.getElementById('learning-' + tab + '-content');
+            if (tabContent) {
+                tabContent.style.display = 'block';
+            }
+            
+            // Load data for specific tabs
+            if (tab === 'library') {
+                loadBookshelf();
+                updateReadingGoalDisplay();
+            } else if (tab === 'reading') {
+                loadCurrentlyReading();
+                loadReadingStats();
+            } else if (tab === 'quotes') {
+                loadQuotes();
+            } else if (tab === 'skills') {
+                renderLearningEntries();
+            }
+        }
+
+        // Reading Goal Functions
+        function showSetGoalModal() {
+            const currentGoal = localStorage.getItem('annualReadingGoal') || '24';
+            document.getElementById('annual-reading-goal').value = currentGoal;
+            document.getElementById('set-goal-modal').classList.add('active');
+        }
+
+        function hideSetGoalModal() {
+            document.getElementById('set-goal-modal').classList.remove('active');
+        }
+
+        function saveReadingGoal() {
+            const goal = parseInt(document.getElementById('annual-reading-goal').value) || 24;
+            localStorage.setItem('annualReadingGoal', goal.toString());
+            hideSetGoalModal();
+            updateReadingGoalDisplay();
+            alert('✓ Reading goal updated!');
+        }
+
+        function updateReadingGoalDisplay() {
+            const goal = parseInt(localStorage.getItem('annualReadingGoal') || '24');
+            const books = JSON.parse(localStorage.getItem('myBooks') || '[]');
+            const completedBooks = books.filter(b => b.status === 'completed').length;
+            const totalPages = books.reduce((sum, b) => sum + (b.currentPage || 0), 0);
+            
+            document.getElementById('books-goal-count').textContent = goal;
+            document.getElementById('books-read-count').textContent = completedBooks;
+            document.getElementById('pages-read-total').textContent = totalPages;
+            
+            const percentage = Math.min(100, Math.round((completedBooks / goal) * 100));
+            document.getElementById('goal-percentage').textContent = percentage;
+            document.getElementById('goal-progress-bar').style.width = percentage + '%';
+        }
+
+        // Book Search Functions
+        async function searchBooks() {
+            const query = document.getElementById('book-search-input').value.trim();
+            if (!query) {
+                alert('Please enter a search term');
+                return;
+            }
+
+            const resultsContainer = document.getElementById('book-search-results');
+            resultsContainer.style.display = 'block';
+            resultsContainer.innerHTML = '<div class="p-4 text-center"><i class="fa-solid fa-spinner fa-spin text-2xl text-purple-600"></i><p class="text-sm text-slate-600 mt-2">Searching...</p></div>';
+
+            try {
+                const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10`);
+                const data = await response.json();
+
+                if (!data.items || data.items.length === 0) {
+                    resultsContainer.innerHTML = '<div class="p-4 text-center text-sm text-slate-500">No books found</div>';
+                    return;
+                }
+
+                resultsContainer.innerHTML = data.items.map(item => {
+                    const book = item.volumeInfo;
+                    const thumbnail = book.imageLinks?.thumbnail || book.imageLinks?.smallThumbnail || '';
+                    const authors = book.authors?.join(', ') || 'Unknown Author';
+                    const pageCount = book.pageCount || 'N/A';
+                    
+                    return `
+                        <div class="book-search-result" onclick='showBookDetails(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+                            <div class="flex gap-3">
+                                <div class="w-16 h-24 flex-shrink-0">
+                                    ${thumbnail ? `<img src="${thumbnail}" alt="${book.title}" class="w-full h-full object-cover rounded">` : 
+                                    `<div class="w-full h-full bg-gradient-to-br from-purple-400 to-indigo-500 rounded flex items-center justify-center text-white text-xs font-bold text-center p-1">${book.title.substring(0, 20)}</div>`}
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-bold text-sm text-slate-900">${book.title}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${authors}</p>
+                                    <p class="text-xs text-slate-500">${pageCount} pages</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                resultsContainer.innerHTML = '<div class="p-4 text-center text-sm text-red-600">Error searching books. Please try again.</div>';
+                console.error('Book search error:', error);
+            }
+        }
+
+        function showBookDetails(bookData) {
+            const book = bookData.volumeInfo;
+            const thumbnail = book.imageLinks?.thumbnail || book.imageLinks?.smallThumbnail || '';
+            const authors = book.authors?.join(', ') || 'Unknown Author';
+            const pageCount = book.pageCount || 'Unknown';
+            const description = book.description || 'No description available';
+            const publishedDate = book.publishedDate || 'Unknown';
+            const categories = book.categories?.join(', ') || 'Uncategorized';
+            
+            const previewLink = bookData.volumeInfo.previewLink || '';
+            const infoLink = bookData.volumeInfo.infoLink || '';
+
+            document.getElementById('book-detail-title').textContent = book.title;
+            document.getElementById('book-details-content').innerHTML = `
+                <div class="mb-4">
+                    ${thumbnail ? `<img src="${thumbnail.replace('&edge=curl', '')}" alt="${book.title}" class="w-32 h-48 object-cover rounded mx-auto mb-3">` : 
+                    `<div class="w-32 h-48 bg-gradient-to-br from-purple-400 to-indigo-500 rounded mx-auto mb-3 flex items-center justify-center text-white font-bold text-center p-2">${book.title}</div>`}
+                    <p class="font-bold text-lg text-slate-900 text-center">${book.title}</p>
+                    <p class="text-sm text-slate-600 text-center mb-2">${authors}</p>
+                    <div class="flex justify-center gap-2 mb-3">
+                        <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-bold">${pageCount} pages</span>
+                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-bold">${publishedDate}</span>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <p class="text-xs font-bold text-slate-600 mb-1">Category</p>
+                    <p class="text-sm text-slate-800">${categories}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="text-xs font-bold text-slate-600 mb-1">Description</p>
+                    <p class="text-sm text-slate-700 leading-relaxed">${description.substring(0, 500)}${description.length > 500 ? '...' : ''}</p>
+                </div>
+                <div class="space-y-2">
+                    <button onclick='addBookToLibrary(${JSON.stringify(bookData).replace(/'/g, "&apos;")}, "reading")' class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm">
+                        <i class="fa-solid fa-book-open"></i> Start Reading
+                    </button>
+                    <button onclick='addBookToLibrary(${JSON.stringify(bookData).replace(/'/g, "&apos;")}, "wishlist")' class="w-full bg-amber-600 text-white py-3 rounded-xl font-bold text-sm">
+                        <i class="fa-solid fa-heart"></i> Add to Wishlist
+                    </button>
+                    ${previewLink ? `<button onclick="openBookReader('${previewLink}', '${book.title.replace(/'/g, "&apos;")}')" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold text-sm">
+                        <i class="fa-solid fa-glasses"></i> Preview Book
+                    </button>` : ''}
+                    ${infoLink ? `<a href="${infoLink}" target="_blank" class="block w-full bg-slate-600 text-white py-3 rounded-xl font-bold text-sm text-center">
+                        <i class="fa-solid fa-external-link"></i> More Info
+                    </a>` : ''}
+                </div>
+            `;
+            
+            document.getElementById('book-details-modal').classList.add('active');
+        }
+
+        function hideBookDetailsModal() {
+            document.getElementById('book-details-modal').classList.remove('active');
+        }
+
+        function addBookToLibrary(bookData, status) {
+            const book = bookData.volumeInfo;
+            const myBook = {
+                id: Date.now(),
+                googleId: bookData.id,
+                title: book.title,
+                authors: book.authors?.join(', ') || 'Unknown Author',
+                thumbnail: book.imageLinks?.thumbnail || book.imageLinks?.smallThumbnail || '',
+                pageCount: book.pageCount || 0,
+                currentPage: 0,
+                status: status, // 'reading', 'completed', 'wishlist'
+                addedDate: new Date().toISOString(),
+                previewLink: book.previewLink || '',
+                description: book.description || '',
+                categories: book.categories?.join(', ') || 'Uncategorized'
+            };
+
+            const books = JSON.parse(localStorage.getItem('myBooks') || '[]');
+            
+            // Check if book already exists
+            if (books.find(b => b.googleId === myBook.googleId)) {
+                alert('This book is already in your library!');
+                return;
+            }
+
+            books.push(myBook);
+            localStorage.setItem('myBooks', JSON.stringify(books));
+            
+            hideBookDetailsModal();
+            loadBookshelf();
+            updateReadingGoalDisplay();
+            alert(`✓ "${myBook.title}" added to your library!`);
+        }
+
+        // Bookshelf Functions
+        function loadBookshelf(filter = 'all') {
+            const books = JSON.parse(localStorage.getItem('myBooks') || '[]');
+            const container = document.getElementById('bookshelf-grid');
+            
+            const filteredBooks = filter === 'all' ? books : books.filter(b => b.status === filter);
+            
+            if (filteredBooks.length === 0) {
+                container.innerHTML = '<p class="col-span-2 text-sm text-slate-500 text-center py-8">No books in this category</p>';
+                return;
+            }
+
+            container.innerHTML = filteredBooks.map(book => {
+                const progress = book.pageCount > 0 ? Math.round((book.currentPage / book.pageCount) * 100) : 0;
+                const statusClass = book.status === 'reading' ? 'status-reading' : 
+                                   book.status === 'completed' ? 'status-completed' : 'status-wishlist';
+                const statusText = book.status === 'reading' ? 'Reading' :
+                                  book.status === 'completed' ? 'Completed' : 'Wishlist';
+                
+                return `
+                    <div class="book-card" onclick="showBookOptions(${book.id})">
+                        <div class="book-cover mb-3">
+                            ${book.thumbnail ? `<img src="${book.thumbnail}" alt="${book.title}">` : 
+                            `<span class="text-center">${book.title}</span>`}
+                        </div>
+                        <span class="book-status-badge ${statusClass} mb-2">${statusText}</span>
+                        <p class="font-bold text-sm text-slate-900 mb-1 line-clamp-2">${book.title}</p>
+                        <p class="text-xs text-slate-600 mb-2">${book.authors}</p>
+                        ${book.status === 'reading' ? `
+                            <div class="reading-progress-bar mb-1">
+                                <div class="reading-progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                            <p class="text-xs text-slate-500">${book.currentPage}/${book.pageCount} pages (${progress}%)</p>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterBooks(status) {
+            // Update filter buttons
+            ['all', 'reading', 'completed', 'wishlist'].forEach(s => {
+                const btn = document.getElementById('filter-' + s);
+                if (btn) {
+                    btn.classList.remove('bg-slate-900', 'text-white');
+                    btn.classList.add('bg-slate-100', 'text-slate-700');
+                }
+            });
+            const activeBtn = document.getElementById('filter-' + status);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-slate-100', 'text-slate-700');
+                activeBtn.classList.add('bg-slate-900', 'text-white');
+            }
+            
+            loadBookshelf(status);
+        }
+
+        function showBookOptions(bookId) {
+            const books = JSON.parse(localStorage.getItem('myBooks') || '[]');
+            const book = books.find(b => b.id === bookId);
+            
+            if (!book) return;
+
+            const options = [];
+            if (book.status === 'reading') {
+                options.push(`<button onclick="showUpdateProgressModal(${bookId})" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm mb-2">
+                    <i class="fa-solid fa-chart-line"></i> Update Progress
+                </button>`);
+            }
+            if (book.status === 'wishlist') {
+                options.push(`<button onclick="changeBookStatus(${bookId}, 'reading')" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold text-sm mb-2">
+                    <i class="fa-solid fa-play"></i> Start Reading
+                </button>`);
+            }
+            if (book.status === 'reading') {
+                options.push(`<button onclick="changeBookStatus(${bookId}, 'completed')" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold text-sm mb-2">
+                    <i class="fa-solid fa-check"></i> Mark as Completed
+                </button>`);
+            }
+            if (book.previewLink) {
+                options.push(`<button onclick="openBookReader('${book.previewLink}', '${book.title.replace(/'/g, "&apos;")}')" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold text-sm mb-2">
+                    <i class="fa-solid fa-glasses"></i> Read Preview
+                </button>`);
+            }
+            options.push(`<button onclick="removeBook(${bookId})" class="w-full bg-red-600 text-white py-3 rounded-xl font-bold text-sm">
+                <i class="fa-solid fa-trash"></i> Remove from Library
+            </button>`);
+
+            document.getElementById('book-details-content').innerHTML = `
+                <div class="mb-4">
+                    ${book.thumbnail ? `<img src="${book.thumbnail}" alt="${book.title}" class="w-32 h-48 object-cover rounded mx-auto mb-3">` : 
+                    `<div class="w-32 h-48 bg-gradient-to-br from-purple-400 to-indigo-500 rounded mx-auto mb-3 flex items-center justify-center text-white font-bold text-center p-2">${book.title}</div>`}
+                    <p class="font-bold text-lg text-slate-900 text-center">${book.title}</p>
+                    <p class="text-sm text-slate-600 text-center mb-2">${book.authors}</p>
+                </div>
+                <div class="space-y-2">
+                    ${options.join('')}
+                </div>
+            `;
+            
+            document.getElementById('book-detail-title').textContent = book.title;
+            document.getElementById('book-details-modal').classList.add('active');
+        }
+
+        function showUpdateProgressModal(bookId) {
+            const books = JSON.parse(localStorage.getItem('myBooks') || '[]');
+            const book = books.find(b => b.id === bookId);
+            
+            if (!book) return;
+
+            currentBookForProgress = bookId;
+            document.getElementById('progress-book-title').textContent = book.title;
+            document.getElementById('current-page-input').value = book.currentPage || 0;
+            document.getElementById('total-pages-input').value = book.pageCount || 0;
+            document.getElementById('reading-notes-input').value = '';
+            
+            hideBookDetailsModal();
+            document.getElementById('update-progress-modal').classList.add('active');
+        }
+
+        function hideUpdateProgressModal() {
+            document.getElementById('update-progress-modal').classList.remove('active');
+            currentBookForProgress = null;
+        }
+
+        function saveReadingProgress() {
+            if (!currentBookForProgress) return;
+
+            const books = JSON.parse(localStorage.getItem('myBooks') || '[]');
+            const bookIndex = books.findIndex(b => b.id === currentBookForProgress);
+            
+            if (bookIndex === -1) return;
+
+            const currentPage = parseInt(document.getElementById('current-page-input').value) || 0;
+            const notes = document.getElementById('reading-notes-input').value.trim();
+
+            books[bookIndex].currentPage = currentPage;
+            books[bookIndex].lastReadDate = new Date().toISOString();
+
+            // Log reading session
+            const readingSessions = JSON.parse(localStorage.getItem('readingSessions') || '[]');
+            readingSessions.unshift({
+                id: Date.now(),
+                bookId: currentBookForProgress,
+                bookTitle: books[bookIndex].title,
+                pageNumber: currentPage,
+                notes: notes,
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('readingSessions', JSON.stringify(readingSessions));
+
+            // Check if completed
+            if (currentPage >= books[bookIndex].pageCount) {
+                books[bookIndex].status = 'completed';
+                books[bookIndex].completedDate = new Date().toISOString();
+                alert('🎉 Congratulations! You finished this book!');
+            }
+
+            localStorage.setItem('myBooks', JSON.stringify(books));
+            
+            hideUpdateProgressModal();
+            loadBookshelf();
+            updateReadingGoalDisplay();
+            alert('✓ Progress updated!');
+        }
+
+        function changeBookStatus(bookId, newStatus) {
+            const books = JSON.parse(localStorage.getItem('myBooks') || '[]');
+            const bookIndex = books.findIndex(b => b.id === bookId);
+            
+            if (bookIndex === -1) return;
+
+            books[bookIndex].status = newStatus;
+            if (newStatus === 'completed') {
+                books[bookIndex].completedDate = new Date().toISOString();
+                books[bookIndex].currentPage = books[bookIndex].pageCount;
+            }
+
+            localStorage.setItem('myBooks', JSON.stringify(books));
+            
+            hideBookDetailsModal();
+            loadBookshelf();
+            updateReadingGoalDisplay();
+            alert('✓ Book status updated!');
+        }
+
+        function removeBook(bookId) {
+            if (!confirm('Are you sure you want to remove this book from your library?')) {
+                return;
+            }
+
+            const books = JSON.parse(localStorage.getItem('myBooks') || '[]');
+            const filteredBooks = books.filter(b => b.id !== bookId);
+            localStorage.setItem('myBooks', JSON.stringify(filteredBooks));
+            
+            hideBookDetailsModal();
+            loadBookshelf();
+            updateReadingGoalDisplay();
+            alert('✓ Book removed from library');
+        }
+
+        // Book Reader Functions
+        function openBookReader(previewLink, bookTitle) {
+            document.getElementById('reader-book-title').textContent = bookTitle;
+            
+            // Create iframe for Google Books preview
+            document.getElementById('book-reader-content').innerHTML = `
+                <iframe src="${previewLink}&embedded=true" width="100%" height="800px" frameborder="0" allowfullscreen></iframe>
+            `;
+            
+            document.getElementById('book-reader-container').classList.add('active');
+        }
+
+        function closeBookReader() {
+            document.getElementById('book-reader-container').classList.remove('active');
+            document.getElementById('book-reader-content').innerHTML = '';
+        }
+
+        // Reading Statistics
+        function loadCurrentlyReading() {
+            const books = JSON.parse(localStorage.getItem('myBooks') || '[]');
+            const readingBooks = books.filter(b => b.status === 'reading');
+            const container = document.getElementById('currently-reading-list');
+            
+            if (readingBooks.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-500 text-center py-4">No books in progress</p>';
+                return;
+            }
+
+            container.innerHTML = readingBooks.map(book => {
+                const progress = book.pageCount > 0 ? Math.round((book.currentPage / book.pageCount) * 100) : 0;
+                return `
+                    <div class="p-4 bg-slate-50 rounded-xl" onclick="showBookOptions(${book.id})">
+                        <div class="flex gap-3 mb-3">
+                            <div class="w-16 h-24 flex-shrink-0">
+                                ${book.thumbnail ? `<img src="${book.thumbnail}" alt="${book.title}" class="w-full h-full object-cover rounded">` : 
+                                `<div class="w-full h-full bg-gradient-to-br from-purple-400 to-indigo-500 rounded flex items-center justify-center text-white text-xs font-bold text-center p-1">${book.title.substring(0, 15)}</div>`}
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-bold text-sm text-slate-900 mb-1">${book.title}</p>
+                                <p class="text-xs text-slate-600 mb-2">${book.authors}</p>
+                                <p class="text-xs text-slate-500">${book.currentPage}/${book.pageCount} pages</p>
+                            </div>
+                        </div>
+                        <div class="reading-progress-bar mb-1">
+                            <div class="reading-progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <p class="text-xs text-slate-500 text-center">${progress}% complete</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadReadingStats() {
+            const books = JSON.parse(localStorage.getItem('myBooks') || '[]');
+            const sessions = JSON.parse(localStorage.getItem('readingSessions') || '[]');
+            
+            // Total pages read
+            const totalPages = books.reduce((sum, b) => sum + (b.currentPage || 0), 0);
+            
+            // Total books completed
+            const completedCount = books.filter(b => b.status === 'completed').length;
+            
+            // Average pages per day (last 30 days)
+            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+            const recentSessions = sessions.filter(s => new Date(s.date) > thirtyDaysAgo);
+            const avgPages = recentSessions.length > 0 ? Math.round(totalPages / 30) : 0;
+            
+            // Reading streak
+            const lastSession = sessions[0];
+            const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString();
+            const today = new Date().toDateString();
+            let streak = parseInt(localStorage.getItem('readingStreak') || '0');
+            
+            if (lastSession && new Date(lastSession.date).toDateString() === today) {
+                // Already logged today, keep streak
+            } else if (lastSession && new Date(lastSession.date).toDateString() === yesterday) {
+                // Continue streak
+            } else {
+                streak = 0;
+            }
+            
+            // Update display
+            document.getElementById('avg-pages-per-day').textContent = avgPages;
+            document.getElementById('reading-streak').textContent = streak;
+            document.getElementById('total-books-read').textContent = completedCount;
+            document.getElementById('reading-time-total').textContent = Math.round(totalPages / 250); // Assuming 250 words per page, 250 words per minute
+            
+            // Load reading history
+            loadReadingHistory();
+        }
+
+        function loadReadingHistory() {
+            const sessions = JSON.parse(localStorage.getItem('readingSessions') || '[]');
+            const container = document.getElementById('reading-history-list');
+            
+            if (sessions.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-500 text-center py-4">No reading sessions logged</p>';
+                return;
+            }
+
+            container.innerHTML = sessions.slice(0, 20).map(session => `
+                <div class="p-3 bg-slate-50 rounded-lg">
+                    <div class="flex justify-between items-start mb-1">
+                        <p class="font-bold text-sm text-slate-800">${session.bookTitle}</p>
+                        <p class="text-xs text-slate-500">${new Date(session.date).toLocaleDateString()}</p>
+                    </div>
+                    <p class="text-xs text-slate-600">Page ${session.pageNumber}</p>
+                    ${session.notes ? `<p class="text-xs text-slate-500 mt-1 italic">${session.notes}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Quotes Functions
+        function saveQuote() {
+            const bookTitle = document.getElementById('quote-book-title').value.trim();
+            const quoteText = document.getElementById('quote-text').value.trim();
+            const page = document.getElementById('quote-page').value.trim();
+            
+            if (!bookTitle || !quoteText) {
+                alert('Please enter book title and quote');
+                return;
+            }
+
+            const quote = {
+                id: Date.now(),
+                bookTitle: bookTitle,
+                text: quoteText,
+                page: page,
+                date: new Date().toISOString()
+            };
+
+            const quotes = JSON.parse(localStorage.getItem('bookQuotes') || '[]');
+            quotes.unshift(quote);
+            localStorage.setItem('bookQuotes', JSON.stringify(quotes));
+
+            // Reset form
+            document.getElementById('quote-book-title').value = '';
+            document.getElementById('quote-text').value = '';
+            document.getElementById('quote-page').value = '';
+
+            loadQuotes();
+            alert('✓ Quote saved!');
+        }
+
+        function loadQuotes() {
+            const quotes = JSON.parse(localStorage.getItem('bookQuotes') || '[]');
+            const container = document.getElementById('quotes-list');
+            
+            if (quotes.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-500 text-center py-4">No quotes saved yet</p>';
+                return;
+            }
+
+            container.innerHTML = quotes.map(quote => `
+                <div class="quote-card">
+                    <p class="text-sm font-medium text-amber-900 italic mb-2">"${quote.text}"</p>
+                    <div class="flex justify-between items-center">
+                        <p class="text-xs font-bold text-amber-800">— ${quote.bookTitle}${quote.page ? `, p.${quote.page}` : ''}</p>
+                        <button onclick="deleteQuote(${quote.id})" class="text-amber-600 hover:text-amber-800">
+                            <i class="fa-solid fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteQuote(quoteId) {
+            if (!confirm('Delete this quote?')) return;
+
+            const quotes = JSON.parse(localStorage.getItem('bookQuotes') || '[]');
+            const filtered = quotes.filter(q => q.id !== quoteId);
+            localStorage.setItem('bookQuotes', JSON.stringify(filtered));
+            loadQuotes();
+        }
+
+        function showRandomQuote() {
+            const quotes = JSON.parse(localStorage.getItem('bookQuotes') || '[]');
+            const display = document.getElementById('random-quote-display');
+            
+            if (quotes.length === 0) {
+                // Show default inspirational quote
+                const defaultQuotes = [
+                    { text: "The more that you read, the more things you will know. The more that you learn, the more places you'll go.", author: "Dr. Seuss" },
+                    { text: "A reader lives a thousand lives before he dies. The man who never reads lives only one.", author: "George R.R. Martin" },
+                    { text: "Books are a uniquely portable magic.", author: "Stephen King" },
+                    { text: "There is no friend as loyal as a book.", author: "Ernest Hemingway" },
+                    { text: "Reading is to the mind what exercise is to the body.", author: "Joseph Addison" }
+                ];
+                const randomDefault = defaultQuotes[Math.floor(Math.random() * defaultQuotes.length)];
+                display.innerHTML = `
+                    <p class="text-sm font-medium text-amber-900 italic mb-2">"${randomDefault.text}"</p>
+                    <p class="text-xs font-bold text-amber-800">— ${randomDefault.author}</p>
+                `;
+            } else {
+                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                display.innerHTML = `
+                    <p class="text-sm font-medium text-amber-900 italic mb-2">"${randomQuote.text}"</p>
+                    <p class="text-xs font-bold text-amber-800">— ${randomQuote.bookTitle}${randomQuote.page ? `, p.${randomQuote.page}` : ''}</p>
+                `;
+            }
+        }
+
+        // Book Recommendations
+        function loadRecommendations() {
+            const container = document.getElementById('recommendations-list');
+            
+            // Shuffle recommendations
+            const shuffled = [...bookRecommendations].sort(() => Math.random() - 0.5).slice(0, 5);
+            
+            container.innerHTML = shuffled.map(book => `
+                <div class="p-3 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border border-purple-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-bold text-sm text-slate-900">${book.title}</p>
+                            <p class="text-xs text-slate-600 mb-1">${book.author}</p>
+                            <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-bold">${book.category}</span>
+                        </div>
+                        <button onclick="searchBookByTitle('${book.title}')" class="text-purple-600 hover:text-purple-800">
+                            <i class="fa-solid fa-search text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function searchBookByTitle(title) {
+            document.getElementById('book-search-input').value = title;
+            switchLearningTab('library');
+            setTimeout(() => searchBooks(), 300);
         }
 
     </script>
